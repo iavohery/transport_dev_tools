@@ -6,6 +6,7 @@ const Utilisateur = sequelize.define('Utilisateur', {
   numcin: { type: DataTypes.STRING, allowNull: false },
   nom: { type: DataTypes.STRING, allowNull: false },
   numtel: { type: DataTypes.STRING, allowNull: false },
+  mot_passe: { type: DataTypes.STRING, allowNull: false },
 }, {
   tableName: 'utilisateur',
   timestamps: false

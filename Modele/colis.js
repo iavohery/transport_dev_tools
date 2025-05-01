@@ -3,7 +3,8 @@ const sequelize = require('../db');
 
 const Colis = sequelize.define('Colis', {
   idcolis: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  type: { type: DataTypes.STRING, allowNull: false }
+  type: { type: DataTypes.STRING, allowNull: false },
+  dateEnvoi: { type: DataTypes.DATEONLY, allowNull: false }
 }, {
   tableName: 'colis',
   timestamps: false
