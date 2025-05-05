@@ -12,6 +12,7 @@ const Trajet = require('./trajet');
 const Utilisateur = require('./utilisateur');
 const Voiture = require('./voiture');
 const Voyage = require('./voyage');
+const Paiement_salaire = require('./paiment_salaire');
 
 Trajet.hasMany(Voyage, { foreignKey: 'idtrajet' });
 Voyage.belongsTo(Trajet, { foreignKey: 'idtrajet' });
@@ -39,6 +40,8 @@ Utilisateur.hasMany(Colis, { foreignKey: 'iduser' });
 Colis.belongsTo(Utilisateur, { foreignKey: 'iduser' });
 Voiture.hasMany(Place, { foreignKey: 'idvoiture' });
 Place.belongsTo(Voiture, { foreignKey: 'idvoiture' });
+Employe.hasMany(Paiement_salaire, { foreignKey: 'idemploye' });
+Paiement_salaire.belongsTo(Employe, { foreignKey: 'idemploye' });
 
 
 module.exports = {

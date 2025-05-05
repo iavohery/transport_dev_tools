@@ -75,25 +75,37 @@ exports.createPaiment = async (req, res) => {
 exports.getAllPaiment = async (req, res) => {
   try {
     const posseders = await Posseder.findAll({ 
-        order: [['id', 'DESC']],
-        include: [
+      order: [['id', 'DESC']],
+      include: [
+        {
+          model: Paiment,
+          attributes: ['idpaiement', 'montant_total', 'mode_paiement', 'statut']
+        },
+        {
+          model: Reserver,
+          attributes: ['id', 'date'],
+          include: [
             {
-              model: Paiment,
-              attributes: ['idpaiement', 'montant_total', 'mode_paiement', 'statut']
-            },
-            {
-              model: Reserver,
-              attributes: ['id', 'date']
-            },
-            {
-              model: Colis,
-              attributes: ['idcolis', 'type']
+              model: Utilisateur,
+              attributes: ['nom']
             }
           ]
-     });
+        },
+        {
+          model: Colis,
+          attributes: ['idcolis', 'type'],
+          include: [
+            {
+              model: Utilisateur,
+              attributes: ['nom']
+            }
+          ]
+        }
+      ]
+    });
 
     return res.status(200).json({
-      message: "Liste des paiments récupérée avec succès",
+      message: "Liste des paiements récupérée avec succès",
       data: posseders,
     });
   } catch (error) {
@@ -101,6 +113,7 @@ exports.getAllPaiment = async (req, res) => {
     return res.status(500).json({ message: "Erreur lors de la récupération" });
   }
 };
+
 
 // GET BY ID
 // exports.getPaimentById = async (req, res) => {

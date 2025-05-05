@@ -12,6 +12,8 @@ const colis = require("../Controler/colis");
 const depense = require("../Controler/depense");
 const paiement = require("../Controler/paimen");
 const reserver = require("../Controler/reserver");
+const voyage = require("../Controler/voyage");
+const tableauBord = require("../Controler/Tableau_bord");
 
 router.post("/createUtilisateur/",utilisateur.createUtilisateur);
 router.put("/updateUtilisateur/:id",utilisateur.updateUtilisateur);
@@ -43,7 +45,7 @@ router.put("/updatePlace/:id",place.updatePlace);
 router.delete("/deletePlace/:id",place.deletePlace);
 router.get("/getAllPlace/",place.getAllPlace);
 //router.get("/recherchePlace/:id",place.getPlaceById);
-router.get("/getPlaceDisponible/:id",place.getPlacesDisponibles);
+router.get("/getVoituresAvecPlacesOccupees/",place.getVoituresAvecPlacesOccupees);
 router.post("/createEmploye/",employe.createEmploye);
 router.put("/updatEmploye/:id",employe.updateEmploye);
 router.delete("/deleteEmploye/:id",employe.deleteEmploye);
@@ -69,6 +71,9 @@ router.post("/createReservation/",reserver.createReservation);
 // router.delete("/deleteChauffeur/:id",chauffeur.deleteChauffeur);
 router.get("/getAllReservation/",reserver.getAllReservation);
 //router.get("/rechercheReservation/:id",reserver.getReservationById);
-
+router.post("/createVoyage/",voyage.createVoyage);
+router.get("/DepensesParJour/",tableauBord.DepensesParJour);
+router.get("/PaiementsParJour/",tableauBord.PaiementsParJour);
+router.get ("/VoyagesParJour/",tableauBord.VoyagesParJour);
 
 module.exports = router;

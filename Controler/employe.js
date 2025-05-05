@@ -84,7 +84,7 @@ exports.getAllEmployes = async (req, res) => {
         },
         {
           model: Utilisateur,
-          attributes: ['iduser', 'nom', 'email'] // ajuste les champs selon ton modèle Utilisateur
+          attributes: ['iduser', 'numcin', 'nom', 'numtel']
         }
       ]
     });

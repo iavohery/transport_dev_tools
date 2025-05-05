@@ -118,27 +118,19 @@ exports.getAllPlace = async (req, res) => {
 //   }
 // };
 
-// Place Dispo
-exports.getPlacesDisponibles = async (req, res) => {
+// Voiture avec Place Occupes
+exports.getVoituresAvecPlacesOccupees = async (req, res) => {
   try {
-    const { point_depart, destination, date } = req.query;
+    const { point_depart, destination, date } = req.body;
 
-    const placesDisponibles = await Place.findAll({
+    const voitures = await Voiture.findAll({
       include: [
         {
-          model: Reserver,
-          required: false,
-          where: {
-            date: date
-          }
-        },
-        {
-          model: Voiture,
+          model: Voyage,
           required: true,
-          include: {
-            model: Voyage,
-            required: true,
-            include: {
+          where: { date: date },
+          include: [
+            {
               model: Trajet,
               required: true,
               where: {
@@ -146,21 +138,31 @@ exports.getPlacesDisponibles = async (req, res) => {
                 destination: destination
               }
             }
-          }
+          ]
+        },
+        {
+          model: Place,
+          required: true,
+          include: [
+            {
+              model: Reserver,
+              required: true, // ✅ Place doit être réservée
+              where: {
+                date: date
+              }
+            }
+          ]
         }
-      ],
-      where: {
-        '$Reservers.idplace$': null
-      }
+      ]
     });
 
     return res.status(200).json({
-      message: "Places disponibles récupérées avec succès",
-      data: placesDisponibles
+      message: "Voitures avec places occupées récupérées avec succès",
+      data: voitures
     });
 
   } catch (error) {
-    console.error("Erreur lors de la récupération des places :", error);
+    console.error("Erreur lors de la récupération :", error);
     return res.status(500).json({ message: "Erreur serveur" });
   }
 };

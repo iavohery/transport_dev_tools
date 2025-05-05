@@ -1,4 +1,6 @@
 const Voiture = require('../Modele/voiture');
+const Voyage = require('../Modele/voyage');
+const Trajet = require('../Modele/trajet');
 
 // CREATE
 exports.createVoiture = async (req, res) => {
@@ -73,11 +75,23 @@ exports.deleteVoiture = async (req, res) => {
 exports.getAllVoiture = async (req, res) => {
   try {
     const voitures = await Voiture.findAll({ 
-      order: [['idvoiture', 'DESC']]
+      order: [['idvoiture', 'DESC']],
+      attributes: ['idvoiture', 'numero_matricule', 'numero', 'marque', 'capacite'],
+      include: [
+        {
+          model: Voyage,
+          include: [
+            {
+              model: Trajet,
+              attributes: ['idtrajet', 'point_depart', 'destination', 'heure_depart', 'tarif'],
+            }
+          ]
+        }
+      ]
     });
 
     return res.status(200).json({
-      message: "Liste des voitures récupérée avec succès",
+      message: "Liste des voitures avec leurs trajets récupérée avec succès",
       data: voitures,
     });
   } catch (error) {
@@ -85,6 +99,7 @@ exports.getAllVoiture = async (req, res) => {
     return res.status(500).json({ message: "Erreur lors de la récupération" });
   }
 };
+
 
 // GET BY ID
 // exports.getVoitureById = async (req, res) => {

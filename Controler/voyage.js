@@ -7,6 +7,7 @@ exports.createVoyage = async (req, res) => {
     console.log("Données reçues :", req.body);
 
     const create = await Voyage.create({
+        date,
         idvoiture,
         idtrajet
     });
