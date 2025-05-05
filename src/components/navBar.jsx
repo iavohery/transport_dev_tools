@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/navbar.css";
 import translogo from "../assets/translogo.png";
@@ -11,6 +11,31 @@ function NavBar() {
   const [darkMode, setDarkMode] = useState(false);
   const [param, setParam] = useState(false);
   const [showAide, setShowAide] = useState(false);
+  const paramRef = useRef(null);
+  const gearButtonRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        paramRef.current &&
+        !paramRef.current.contains(event.target) &&
+        gearButtonRef.current &&
+        !gearButtonRef.current.contains(event.target)
+      ) {
+        setParam(false);
+      }
+    };
+
+    if (param) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [param]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -64,7 +89,7 @@ function NavBar() {
             <div id="rond3"></div>
           </li>
           <li id="menu-gear">
-            <button id="gear" onClick={toggleParam}>
+            <button id="gear" onClick={toggleParam} ref={gearButtonRef}>
               <i className="fa fa-gear"></i>
               <span>Paramètre</span>
             </button>
@@ -74,7 +99,7 @@ function NavBar() {
             </button>
           </li>
         </ul>
-        <div className={param ? "bas-gear active" : "bas-gear"}>
+        <div className={param ? "bas-gear active" : "bas-gear"} ref={paramRef}>
           <div className="bas-gear-1">
             <label>Langue :</label>
             <select name="" id="langue">

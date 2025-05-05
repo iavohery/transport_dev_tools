@@ -333,13 +333,18 @@
   color: var(--bleu-marine);
   background-color: #004b8d1d;
 }
-.form-group {
+.form-group__ {
+  display: flex;
+  justify-content: space-between;
 }
-.form-group label {
+.form-group__ label {
+  margin-top: 10px;
   font-size: 13px;
   color: rgba(0, 0, 0, 0.644);
+  margin-right: 20px;
 }
-#input {
+#input__ {
+  margin-top: 10px;
   width: 298px;
   height: 35px;
   background-color: transparent;
@@ -352,7 +357,7 @@
   font-size: 12px;
   transition: all 0.3s;
 }
-#input:focus {
+#input__:focus {
   border-bottom: 1px solid var(--bleu-marine);
 }
 

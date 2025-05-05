@@ -11,10 +11,16 @@ function ReserverComp({ setShowPayment, setReservationData }) {
   const [travelers, setTravelers] = useState(1);
   const [timeOfDay, setTimeOfDay] = useState("morning");
   const [prixTotal, setPrixTotal] = useState(0);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [voituresDisponibles, setVoituresDisponibles] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSearchPerformed(true);
+    // setSearchPerformed(true);
+
+    setHasSearched(true);
+    const resultats = fetchVoituresDisponibles();
+    setVoituresDisponibles(resultats);
 
     console.log({
       departure,
@@ -23,6 +29,15 @@ function ReserverComp({ setShowPayment, setReservationData }) {
       travelers,
       timeOfDay,
     });
+  };
+
+  const isFormValid = () => {
+    return (
+      departure !== "" &&
+      arrival !== "" &&
+      reservationDate !== "" &&
+      travelers > 0
+    );
   };
 
   const cities = [
@@ -42,10 +57,12 @@ function ReserverComp({ setShowPayment, setReservationData }) {
     }
   };
 
+
   return (
     <div className="centrereserver">
       <div className="centrereserver_1">
         <h2>Choisissez votre itinéraire</h2>
+        {/* <p id="centrereserver_1_p">(Veuillez renseigner les informations nécessaires)</p> */}
         <form>
           <div className="form-group1">
             <label htmlFor="departure">Départ:</label>
@@ -146,7 +163,12 @@ function ReserverComp({ setShowPayment, setReservationData }) {
             </div>
           </div>
 
-          <button className="submit-btn">
+          <button
+            type="button"
+            className={`submit-btn ${!isFormValid() ? "disabled" : ""}`}
+            onClick={handleSubmit}
+            disabled={!isFormValid()}
+          >
             <span>Recherche </span>
             <i className="fa fa-search"></i>
           </button>
@@ -173,18 +195,65 @@ function ReserverComp({ setShowPayment, setReservationData }) {
             <p>Chauffeur</p>
           </div>
         </div>
-        {/* <div className="no-results-message">
+        {hasSearched && voituresDisponibles.length === 0 && (
+          <div className="no-results-message">
             <i className="fa fa-exclamation-circle"></i>
-            <p>Aucun trajet trouvé pour vos critères de recherche</p>
-          </div> */}
-        <Voiture_dispo
-          setShowPayment={setShowPayment}
-          setReservationData={setReservationData}
-        />
-        <Voiture_dispo
-          setShowPayment={setShowPayment}
-          setReservationData={setReservationData}
-        />
+            <p>Aucun trajet trouvé pour vos critères</p>
+            <p className="search-tip">
+              Essayez d'élargir vos dates ou de vérifier les noms des villes
+            </p>
+          </div>
+        )}
+
+        {/* <div className="pre-search-message">
+          <div className="search-icon-container">
+            <i className="fa fa-search fa-3x"></i>
+          </div>
+          <h3>Recherchez votre trajet idéal</h3>
+          <p>
+            Veuillez sélectionner vos critères de voyage (ville de départ,
+            destination, date, nombre de voyageur et heure) puis cliquez sur "Rechercher"
+          </p>
+          <div className="tips">
+            <p>
+              <i className="fa fa-lightbulb"></i> Conseil : Essayez d'élargir
+              vos dates pour plus d'options
+            </p>
+          </div>
+        </div> */}
+        {!hasSearched && (
+          <div className="pre-search-message">
+            <div className="search-icon-container">
+              <i className="fa fa-search fa-3x"></i>
+            </div>
+            <h3>Recherchez votre trajet idéal</h3>
+            <p>
+              Veuillez sélectionner vos critères de voyage (ville de départ,
+              destination, date, nombre de voyageur et heure) puis cliquez sur
+              "Rechercher"
+            </p>
+            <div className="tips">
+              <p>
+                <i className="fa fa-lightbulb"></i> Conseil : Essayez d'élargir
+                vos dates pour plus d'options
+              </p>
+            </div>
+          </div>
+        )}
+
+        {hasSearched && voituresDisponibles.length > 0 && (
+          <>
+            {voituresDisponibles.map((voiture) => (
+              <Voiture_dispo
+                key={voiture.id}
+                setShowPayment={setShowPayment}
+                setReservationData={setReservationData}
+                maxPlaces={travelers}
+                data={voiture}
+              />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

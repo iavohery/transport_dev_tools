@@ -10,7 +10,9 @@ function Recette() {
     const handleHashChange = () => {
       if (window.location.hash) {
         const sectionId = window.location.hash.substring(1);
-        document.getElementById(sectionId)?.scrollIntoView();
+        document.getElementById(sectionId)?.scrollIntoView({
+          behavior: "smooth",
+        });
       }
     };
 

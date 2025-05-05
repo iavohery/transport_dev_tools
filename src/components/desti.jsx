@@ -14,7 +14,9 @@ function Desti({ destination_titre,image }) {
           <i className="fa fa-map-marker"></i>
           <span>{destination_titre}</span>
         </h2>
-        <button>Reserver</button>
+        <Link to="/Reserver">
+          <button>Reserver</button>
+        </Link>
       </div>
     </div>
   );
