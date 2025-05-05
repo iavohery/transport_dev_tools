@@ -50,10 +50,10 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers }) {
             const inputName = header.toLowerCase().replace(/\s+/g, "_");
 
             return (
-              <div key={index} className="form-group">
+              <div key={index} className="form-group__">
                 <label>{header} :</label>
                 <input
-                id="input"
+                id="input__"
                   type={inputType}
                   name={inputName}
                   placeholder={`Entrez ${header}`}

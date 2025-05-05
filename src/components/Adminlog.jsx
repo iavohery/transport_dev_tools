@@ -48,36 +48,6 @@ function Adminlog() {
           </Link>
         </form>
       </div>
-      {/* <div className="centre1"
-        id="centre3"
-      >
-        <i className="fa fa-user"></i>
-        <h2>Utilisateur</h2>
-        <p>Se connecter pour continuer d'accéder à la page</p>
-        <form action="">
-          <input type="text" placeholder="Nom d'utilisateur" />
-          <br />
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Mot de passe"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-          <br />
-          {password && (
-            <i
-              id="eye"
-              className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
-              onClick={togglePasswordVisibility}
-            ></i>
-          )}
-          <Link to="/AdminPage">
-            <button>
-              Continuer <i className="fa fa-arrow-right"></i>
-            </button>
-          </Link>
-        </form>
-      </div> */}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import "../css/voiture_dispo.css";
 import "font-awesome/css/font-awesome.min.css";
 
-function Voiture_dispo({ setShowPayment, setReservationData }) {
+function Voiture_dispo({ setShowPayment, setReservationData, maxPlaces }) {
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const prixUnitaire = 20000;
   const prixTotal = selectedPlaces.length * prixUnitaire;
@@ -27,11 +27,14 @@ function Voiture_dispo({ setShowPayment, setReservationData }) {
     const placeNumber = placeDiv.textContent;
     if (!placeNumber || occupiedPlaces.includes(placeNumber)) return;
 
-    setSelectedPlaces((prev) =>
-      prev.includes(placeNumber)
-        ? prev.filter((p) => p !== placeNumber)
-        : [...prev, placeNumber]
-    );
+    setSelectedPlaces((prev) => {
+      if (prev.includes(placeNumber)) {
+        return prev.filter((p) => p !== placeNumber);
+      } else if (prev.length < maxPlaces) {
+        return [...prev, placeNumber];
+      }
+      return prev;
+    });
   };
 
   const getPlaceClass = (placeNumber) => {
