@@ -1,5 +1,6 @@
 .desti {
   min-width: 300px;
+  max-width: 300px;
   height: 250px;
   border-radius: 10px;
 }
@@ -8,6 +9,19 @@
   height: 75%;
   background-color: blue;
   border-radius: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+#image_dest {
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+#image_dest:hover {
+  width: 106%;
+  height: 106%;
+  transform: translate(-3%, -3%);
 }
 .bas {
   width: 100%;
@@ -16,12 +30,11 @@
   border-bottom-right-radius: 10px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 }
-.bas h2 i{
-    font-size: 15px;
-    color: var(--bleu-marine);
-
+.bas h2 i {
+  font-size: 15px;
+  color: var(--bleu-marine);
 }
 .bas h2 {
   font-size: 13px;
@@ -49,6 +62,8 @@
   text-transform: uppercase;
   padding-top: 6px;
   transition: all 0.3s;
+  border: none;
+  outline: none;
 }
 .bas button:focus {
   border: none;
@@ -56,5 +71,8 @@
 }
 .bas button:hover {
   width: 110px;
-  border: 1px solid var(--bleu-marine);
+  transform: translateX(5px);
+  border: none;
+  outline: none;
+  /* border: 1px solid var(--bleu-marine); */
 }

@@ -48,7 +48,7 @@ function Adminlog() {
           </Link>
         </form>
       </div>
-      <div className="centre1"
+      {/* <div className="centre1"
         id="centre3"
       >
         <i className="fa fa-user"></i>
@@ -77,7 +77,7 @@ function Adminlog() {
             </button>
           </Link>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -11,6 +11,7 @@
   justify-content: space-between;
   animation: navbar2 0.5s;
   background-color:white;
+  z-index: 1000;
   /* box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.164); */
 }
 @keyframes navbar2 {
@@ -36,7 +37,7 @@
   right: 40px;
 }
 .navbar_droite2 #déco {
-  color: rgba(14, 14, 14, 0.599);
+  color: #0e0e0e99;
   font-size: 20px;
   outline: none;
   width: 20px;
@@ -48,7 +49,8 @@
   overflow: hidden;
   padding-right: 20px;
 }
-.navbar_droite2 #déco i {
+.navbar_droite2 #déco .fa-home {
+  font-size: 14px;
   position: relative;
   right: 10px;
   width: 10px;

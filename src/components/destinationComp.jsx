@@ -1,18 +1,22 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import fontLog from "../assets/fontLog.jpg";
 import "../css/destinationComp.css";
 import Desti from "./desti";
-import Footer from "./footer";
+import tana from "../assets/tana.jpg";
+import fianara from "../assets/fianara.jpg";
+import antsirabe from "../assets/antsirabe.jpg";
+import ambositra from "../assets/ambositra1.jpg";
+import antsiranana from "../assets/antsiranana.jpg";
+import mahajanga from "../assets/mahajanga.jpg";
 
 function DestinationComp() {
-  const positions = [
-    "Antananarivo",
-    "Fianarantsoa",
-    "Antsirabe",
-    "Ambositra",
-    "Antsiranana",
-    "Mahajanga",
+  const cities = [
+    { name: "Antananarivo", image: tana },
+    { name: "Fianarantsoa", image: fianara },
+    { name: "Antsirabe", image: antsirabe },
+    { name: "Ambositra", image: ambositra },
+    { name: "Antsiranana", image: antsiranana },
+    { name: "Mahajanga", image: mahajanga },
   ];
 
   return (
@@ -20,8 +24,8 @@ function DestinationComp() {
       <h3>Plusieurs destinations disponibles</h3>
       <p>Choisissez celle qui vous convient</p>
       <div className="centredestination_1">
-        {positions.map((position, index) => (
-          <Desti key={index} destination_titre={position} />
+        {cities.map((city, index) => (
+          <Desti key={index} destination_titre={city.name} image={city.image} />
         ))}
       </div>
     </div>

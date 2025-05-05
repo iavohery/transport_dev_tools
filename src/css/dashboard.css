@@ -1,0 +1,86 @@
+.dash {
+  width: 18%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  z-index: 500;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: dash 1s;
+  background-color: white;
+  /* border-right: 1px solid rgba(0, 0, 0, 0.214); */
+  border-right: 1px solid #004b8d49;
+  /* background-color: var(--bleu-marine); */
+  /* box-shadow: 5px 0px 10px rgba(0, 0, 0, 0.227); */
+}
+@keyframes dash {
+  from {
+    transform: translateX(-300px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.btn_dash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+}
+.btn_dash button {
+  width: 75%;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  /* border-bottom: 1px solid var(--bleu-marine); */
+  outline: none;
+  border-radius: 0;
+  color: var(--bleu-marine);
+  transition: all 0.3s;
+}
+.btn_dash button.active #rond_dash {
+  display: block;
+}
+#rond_dash {
+  transition: all 0.3s;
+  display: none;
+  width: 6px;
+  height: 6px;
+  background-color: var(--bleu-marine);
+  border-radius: 50%;
+  transform: translateY(2px);
+  animation: rond_dash 0.5s;
+}
+@keyframes rond_dash {
+  from {
+    width: 6px;
+    height: 6px;
+    transform: translateX(30px);
+    scale: 0;
+  }
+  to {
+    width: 6px;
+    height: 6px;
+    transform: translateX(0);
+    scale: 1;
+  }
+}
+.btn_dash button i {
+  color: rgb(144, 0, 169);
+}
+.btn_dash button span {
+  font-size: 14px;
+  white-space: nowrap;
+}
+.btn_dash button:hover {
+  transform: translateX(10px);
+  outline: none;
+  gap: 20px;
+  border: none;
+}

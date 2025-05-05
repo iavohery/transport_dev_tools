@@ -7,6 +7,7 @@
 .voiture_dispo {
   width: 850px;
   min-height: 210px;
+   max-height: 210px;
   background-color: rgb(255, 255, 255);
   border-radius: 0px;
   margin-top: 50px;
@@ -43,8 +44,17 @@
   transition: all 0.3s;
 }
 .place_d.selected {
-  background-color:var(--vert);
+  background-color: var(--vert);
   color: white;
+}
+.place_d.occupied {
+  background-color: var(--gris-occupé);
+  border: 1px solid rgba(128, 128, 128, 0);
+  color: white;
+  cursor: not-allowed;
+}
+.place_d.occupied:hover {
+  background-color: var(--gris-occupé); 
 }
 .place_d:hover {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.205);
@@ -97,9 +107,8 @@
   position: relative;
   top: 20px;
 }
-.donn4 span{
+.donn4 span {
   color: #ff00d0;
-
 }
 #donn span {
   font-weight: 600;
@@ -119,22 +128,28 @@
   width: 120px;
   height: 40px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.758);
+  /* color: rgba(255, 255, 255, 0.758);
   background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.327); */
+  background-color: white;
+  color: var(--bleu-marine);
   transition: all 0.3s;
-  border: 1px solid rgba(255, 255, 255, 0.327);
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  outline: none;
   margin-right: 20px;
   gap: 10px;
 }
 #valider_voiture p {
   position: relative;
-  color: rgba(255, 255, 255, 0.758);
-  bottom:0.5px;
+  color: var(--bleu-marine);
+  /* color: rgba(255, 255, 255, 0.758); */
+  bottom: 0.5px;
 }
 #valider_voiture:hover {
-  border: 1px solid white;
-  color: white;
+  /* border: 1px solid white; */
+  /* color: white; */
+  width: 130px;
 }

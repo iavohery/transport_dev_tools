@@ -4,38 +4,15 @@ import "../css/crud.css";
 import AjoutCrud from "./ajoutCrud";
 import SupprimerCrud from "./supprimerCrud";
 
-function Crud({ titre, headers = [] }) {
+function Crud({ titre, headers = [], data = [], onDataChange }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showAjoutCrud, setShowAjoutCrud] = useState(false);
   const [showSupCrud, setShowSupCrud] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
   const [tempData, setTempData] = useState({});
-  const [displayData, setDisplayData] = useState([]); 
+  const [displayData, setDisplayData] = useState([]);
   const [highlightedRow, setHighlightedRow] = useState(null);
-  const [data, setData] = useState([
-    {
-      id: 1,
-      date: "11/11/11",
-      nom: "toky",
-      numero: "032 07 940 01",
-      place: "2",
-    },
-    {
-      id: 2,
-      date: "11/12/11",
-      nom: "belou",
-      numero: "032 03 920 01",
-      place: "2",
-    },
-    {
-      id: 3,
-      date: "08/11/11",
-      nom: "zfz",
-      numero: "032 07 920 01",
-      place: "2",
-    },
-  ]);
 
   useEffect(() => {
     setDisplayData([...data]);
@@ -103,7 +80,7 @@ function Crud({ titre, headers = [] }) {
     <div className="ppp">
       <div className="crud_cont">
         <div className="entete">
-          <div className="entete_1">
+          <div className="entete_3">
             <p id="liste_des">Listes des {titre}s:</p>
           </div>
           <div className="entete_2">

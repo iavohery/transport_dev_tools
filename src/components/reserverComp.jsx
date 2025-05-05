@@ -4,12 +4,26 @@ import { Link, useLocation } from "react-router-dom";
 import fontLog from "../assets/fontLog.jpg";
 import Voiture_dispo from "./voiture_dispo";
 
-function ReserverComp() {
+function ReserverComp({ setShowPayment, setReservationData }) {
   const [departure, setDeparture] = useState("");
   const [arrival, setArrival] = useState("");
   const [reservationDate, setReservationDate] = useState("");
   const [travelers, setTravelers] = useState(1);
   const [timeOfDay, setTimeOfDay] = useState("morning");
+  const [prixTotal, setPrixTotal] = useState(0);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSearchPerformed(true);
+
+    console.log({
+      departure,
+      arrival,
+      reservationDate,
+      travelers,
+      timeOfDay,
+    });
+  };
 
   const cities = [
     "Antananarivo",
@@ -28,23 +42,12 @@ function ReserverComp() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({
-      departure,
-      arrival,
-      reservationDate,
-      travelers,
-      timeOfDay,
-    });
-  };
-
   return (
     <div className="centrereserver">
       <div className="centrereserver_1">
         <h2>Choisissez votre itinéraire</h2>
         <form>
-          <div className="form-group">
+          <div className="form-group1">
             <label htmlFor="departure">Départ:</label>
             <select
               id="departure"
@@ -60,7 +63,7 @@ function ReserverComp() {
             </select>
           </div>
 
-          <div className="form-group">
+          <div className="form-group1">
             <label htmlFor="arrival">Arrivée:</label>
             <select
               id="arrival"
@@ -76,7 +79,7 @@ function ReserverComp() {
             </select>
           </div>
 
-          <div className="form-group">
+          <div className="form-group1">
             <label htmlFor="reservationDate">Date de réservation:</label>
             <input
               type="date"
@@ -86,7 +89,7 @@ function ReserverComp() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-group1">
             <label>Nombre de voyageurs:</label>
             <div className="travelers-control">
               <button
@@ -107,7 +110,7 @@ function ReserverComp() {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group1">
             <label>Heure de départ:</label>
             <div className="time-options">
               <label>
@@ -170,10 +173,18 @@ function ReserverComp() {
             <p>Chauffeur</p>
           </div>
         </div>
-        <Voiture_dispo />
-        <Voiture_dispo />
-        <Voiture_dispo />
-        <Voiture_dispo />
+        {/* <div className="no-results-message">
+            <i className="fa fa-exclamation-circle"></i>
+            <p>Aucun trajet trouvé pour vos critères de recherche</p>
+          </div> */}
+        <Voiture_dispo
+          setShowPayment={setShowPayment}
+          setReservationData={setReservationData}
+        />
+        <Voiture_dispo
+          setShowPayment={setShowPayment}
+          setReservationData={setReservationData}
+        />
       </div>
     </div>
   );

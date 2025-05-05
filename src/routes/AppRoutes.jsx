@@ -10,6 +10,7 @@ import Chauffeur from "../pages/Chauffeur";
 import Voitures from "../pages/Voitures";
 import Employe from "../pages/Employe";
 import Trajet from "../pages/Trajet";
+import Recette from "../pages/Recette";
 
 
 function AppRoutes() {
@@ -27,6 +28,7 @@ function AppRoutes() {
         <Route path="/Voitures" element={<Voitures />} />
         <Route path="/Employe" element={<Employe />} />
         <Route path="/Trajet" element={<Trajet />} />
+        <Route path="/Recette" element={<Recette />} />
       </Routes>
     </Router>
   );

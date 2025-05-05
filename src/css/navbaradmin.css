@@ -55,6 +55,9 @@
   /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.26); */
   transition: all 0.5s;
 }
+.fa-sign-out{
+  font-size: 14px;
+}
 .navbar__links5 li:hover {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.341);
 }

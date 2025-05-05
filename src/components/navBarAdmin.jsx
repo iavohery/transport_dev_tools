@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/navbaradmin.css";
 import "font-awesome/css/font-awesome.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import translogo from "../assets/translogo.png";
 
 function NavBarAdmin({ setShowDeco }) {
@@ -21,6 +22,12 @@ function NavBarAdmin({ setShowDeco }) {
       </div>
       <div className="navbar__links5">
         <ul>
+          <li>
+            <Link className="link" to="/Recette">
+              <i className="fa fa-money-bill-wave"></i>
+              Recette
+            </Link>
+          </li>
           <li>
             <Link className="link" to="/Reservation">
               <i className="fa fa-calendar"></i>
