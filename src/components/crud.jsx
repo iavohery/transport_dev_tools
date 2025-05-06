@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState,useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/crud.css";
 import AjoutCrud from "./ajoutCrud";
@@ -41,7 +41,7 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
           newData.unshift(highlightedItem);
           setDisplayData(newData);
         }
-      }, 2000);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }

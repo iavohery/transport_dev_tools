@@ -56,9 +56,7 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
             >
               Annuler
             </button>
-            <button id="ajouter_ajout" type="submit">
-              Ajouter
-            </button>
+            <button id="ajouter_ajout">Ajouter</button>
           </div>
         </form>
       </div>

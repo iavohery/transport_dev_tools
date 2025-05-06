@@ -17,8 +17,8 @@
   height: 600px;
   background-color: white;
   animation: cont1 0.3s;
-  /* border-radius: 10px; */
-  /* overflow-y: auto; */
+  border-radius: 10px;
+  overflow: hidden;
 }
 .centre_aide1::-webkit-scrollbar{
     background-color: rgb(225, 225, 225);

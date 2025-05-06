@@ -30,21 +30,33 @@ const RecetteDiv = forwardRef((props, ref) => {
       { date: "01/01/2023", valeur: 1500 },
       { date: "02/01/2023", valeur: 2100 },
       { date: "03/01/2023", valeur: 1800 },
+       { date: "01/01/2023", valeur: 1500 },
+      { date: "02/01/2023", valeur: 2100 },
+      { date: "03/01/2023", valeur: 1800 },
     ],
     depenses: [
       { date: "01/01/2023", valeur: 500 },
       { date: "02/01/2023", valeur: 700 },
       { date: "03/01/2023", valeur: 600 },
+       { date: "01/01/2023", valeur: 1500 },
+      { date: "02/01/2023", valeur: 2100 },
+      { date: "03/01/2023", valeur: 1800 },
     ],
     benefice: [
       { date: "01/01/2023", valeur: 1000 },
       { date: "02/01/2023", valeur: 1400 },
       { date: "03/01/2023", valeur: 1200 },
+       { date: "01/01/2023", valeur: 1500 },
+      { date: "02/01/2023", valeur: 2100 },
+      { date: "03/01/2023", valeur: 1800 },
     ],
     trajet: [
       { date: "01/01/2023", valeur: 30 },
       { date: "02/01/2023", valeur: 45 },
       { date: "03/01/2023", valeur: 25 },
+       { date: "01/01/2023", valeur: 1500 },
+      { date: "02/01/2023", valeur: 2100 },
+      { date: "03/01/2023", valeur: 1800 },
     ],
   });
 

@@ -2,6 +2,8 @@ import { useState } from "react";
 import NavBar from "../components/navBar";
 import ReserverComp from "../components/reserverComp";
 import Payement from "../components/payement";
+import Mail from "../components/mail";
+
 
 function Reserver() {
   const [showPayment, setShowPayment] = useState(false);
@@ -24,6 +26,8 @@ function Reserver() {
           totalPrice={reservationData.totalPrice}
         />
       )}
+
+      <Mail />
     </div>
   );
 }
