@@ -53,7 +53,7 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers }) {
               <div key={index} className="form-group__">
                 <label>{header} :</label>
                 <input
-                id="input__"
+                  id="input__"
                   type={inputType}
                   name={inputName}
                   placeholder={`Entrez ${header}`}
@@ -70,7 +70,9 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers }) {
             <button id="annuler_ajout" onClick={() => setShowAjoutCrud(false)}>
               Annuler
             </button>
-            <button id="ajouter_ajout">Ajouter</button>
+            <button id="ajouter_ajout">
+              Ajouter
+            </button>
           </div>
         </form>
       </div>

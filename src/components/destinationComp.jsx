@@ -21,7 +21,9 @@ function DestinationComp() {
 
   return (
     <div className="centredestination">
-      <h3>Plusieurs destinations disponibles</h3>
+      <h3>
+        Plusieurs destinations disponibles
+      </h3>
       <p>Choisissez celle qui vous convient</p>
       <div className="centredestination_1">
         {cities.map((city, index) => (

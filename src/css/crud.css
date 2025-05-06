@@ -386,7 +386,7 @@
 }
 
 .highlight-row {
-  background-color: #ffeb3b;
+  background-color:rgba(250, 235, 215, 0.49);
   transition: background-color 0.5s ease;
 }
 #p_res .fa-list{
