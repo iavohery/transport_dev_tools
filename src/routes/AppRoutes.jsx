@@ -11,7 +11,8 @@ import Voitures from "../pages/Voitures";
 import Employe from "../pages/Employe";
 import Trajet from "../pages/Trajet";
 import Recette from "../pages/Recette";
-
+import Poste from "../pages/poste";
+import Voyage from "../pages/voyage";
 
 function AppRoutes() {
   return (
@@ -29,6 +30,8 @@ function AppRoutes() {
         <Route path="/Employe" element={<Employe />} />
         <Route path="/Trajet" element={<Trajet />} />
         <Route path="/Recette" element={<Recette />} />
+        <Route path="/Poste" element={<Poste />} />
+        <Route path="/Voyage" element={<Voyage />} />
       </Routes>
     </Router>
   );

@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import "../css/crud.css";
 import "font-awesome/css/font-awesome.min.css";
 
-function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers }) {
+function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
   const [formData, setFormData] = useState({});
 
   const handleChange = (e) => {
@@ -15,37 +15,19 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers }) {
   };
 
   const handleSubmit = (e) => {
-    console.log(formData);
+    e.preventDefault();
+    if (onAddData) {
+      onAddData(formData);
+    }
     setShowAjoutCrud(false);
   };
+
   return (
     <div className="floucrud">
       <div className="floucrud1">
         <h2>Nouvelle {titre_ajout}</h2>
-        <form action="">
+        <form onSubmit={handleSubmit}>
           {headers.map((header, index) => {
-            const getInputType = (headerText) => {
-              const lowerHeader = headerText.toLowerCase();
-
-              if (/(date|naissance|anniversaire)/.test(lowerHeader))
-                return "date";
-              if (
-                /(montant|prix|quantité|quantite|nombre|Nombre)/.test(
-                  lowerHeader
-                )
-              )
-                return "number";
-              if (/(email|e-mail|courriel|mail)/.test(lowerHeader))
-                return "email";
-              if (/(tel|phone|téléphone|telephone)/.test(lowerHeader))
-                return "tel";
-              if (/(url|site|web|link)/.test(lowerHeader)) return "url";
-              if (/(password|motdepasse|mdp)/.test(lowerHeader))
-                return "password";
-
-              return "text";
-            };
-
             const inputType = getInputType(header);
             const inputName = header.toLowerCase().replace(/\s+/g, "_");
 
@@ -67,17 +49,32 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers }) {
             );
           })}
           <div className="btn_ajouter">
-            <button id="annuler_ajout" onClick={() => setShowAjoutCrud(false)}>
+            <button
+              id="annuler_ajout"
+              type="button"
+              onClick={() => setShowAjoutCrud(false)}
+            >
               Annuler
             </button>
-            <button id="ajouter_ajout">
-              Ajouter
-            </button>
+            <button id="ajouter_ajout">Ajouter</button>
           </div>
         </form>
       </div>
     </div>
   );
+}
+
+// Fonction utilitaire à l’extérieur
+function getInputType(headerText) {
+  const lowerHeader = headerText.toLowerCase();
+  if (/(date|naissance|anniversaire)/.test(lowerHeader)) return "date";
+  if (/(montant|prix|quantité|quantite|nombre)/.test(lowerHeader))
+    return "number";
+  if (/(email|e-mail|courriel|mail)/.test(lowerHeader)) return "email";
+  if (/(tel|phone|téléphone|telephone)/.test(lowerHeader)) return "tel";
+  if (/(url|site|web|link)/.test(lowerHeader)) return "url";
+  if (/(password|motdepasse|mdp)/.test(lowerHeader)) return "password";
+  return "text";
 }
 
 export default AjoutCrud;
