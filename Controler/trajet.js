@@ -1,16 +1,15 @@
-const Trajet = require('../Modele/trajet');
+const Trajet = require("../Modele/trajet");
 
 // CREATE
 exports.createTrajet = async (req, res) => {
   try {
-    const { point_depart, destination, heure_depart, tarif } = req.body;
+    const { point_depart, destination, tarif } = req.body;
     console.log("Données reçues :", req.body);
 
     const create = await Trajet.create({
       point_depart,
       destination,
-      heure_depart,
-      tarif
+      tarif,
     });
 
     res.status(201).json(create);
@@ -24,7 +23,7 @@ exports.createTrajet = async (req, res) => {
 exports.updateTrajet = async (req, res) => {
   try {
     const { id } = req.params;
-    const { point_depart, destination, heure_depart, tarif } = req.body;
+    const { point_depart, destination, tarif } = req.body;
 
     const existTrajet = await Trajet.findByPk(id);
     if (!existTrajet) {
@@ -34,8 +33,7 @@ exports.updateTrajet = async (req, res) => {
     await existTrajet.update({
       point_depart,
       destination,
-      heure_depart,
-      tarif
+      tarif,
     });
 
     return res.status(200).json({
@@ -44,7 +42,9 @@ exports.updateTrajet = async (req, res) => {
     });
   } catch (error) {
     console.error("Erreur lors de la mise à jour :", error);
-    return res.status(500).json({ error: "Erreur lors de la mise à jour du trajet." });
+    return res
+      .status(500)
+      .json({ error: "Erreur lors de la mise à jour du trajet." });
   }
 };
 
@@ -72,7 +72,7 @@ exports.deleteTrajet = async (req, res) => {
 // GET ALL
 exports.getAllTrajet = async (req, res) => {
   try {
-    const trajets = await Trajet.findAll({ order: [['idtrajet', 'DESC']] });
+    const trajets = await Trajet.findAll({ order: [["idtrajet", "DESC"]] });
 
     return res.status(200).json({
       message: "Liste des trajets récupérée avec succès",
