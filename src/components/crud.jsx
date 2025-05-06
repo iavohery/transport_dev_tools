@@ -4,7 +4,7 @@ import "../css/crud.css";
 import AjoutCrud from "./ajoutCrud";
 import SupprimerCrud from "./supprimerCrud";
 
-function Crud({ titre, headers = [], data = [], onDataChange }) {
+function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showAjoutCrud, setShowAjoutCrud] = useState(false);
@@ -65,9 +65,11 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
   };
 
   const handleSaveEdit = (rowIndex) => {
-    console.log("Données sauvegardées:", tempData);
-    setEditingRow(null);
-    setTempData({});
+    if (onUpdate) {
+      onUpdate(rowIndex, tempData);
+  }
+  setEditingRow(null);
+  setTempData({});
   };
 
   const handleInputChange = (header, value) => {
@@ -197,7 +199,7 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
                   <td>
                     <button
                       className="supprimer"
-                      onClick={() => setShowSupCrud(true)}
+                      onClick={() => {setShowSupCrud(true)}}
                     >
                       <i className="fa fa-trash"></i>
                     </button>
