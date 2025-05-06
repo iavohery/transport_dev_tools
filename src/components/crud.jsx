@@ -13,6 +13,17 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
   const [tempData, setTempData] = useState({});
   const [displayData, setDisplayData] = useState([]);
   const [highlightedRow, setHighlightedRow] = useState(null);
+  const [selectedIdToDelete, setSelectedIdToDelete] = useState(null);
+  const handleAddData = async (newItem) => {
+    try {
+      // Par exemple, si onDataChange(null, data) signifie "ajout"
+      if (onDataChange) {
+        await onDataChange(null, newItem); // ou toute logique selon ton back
+      }
+    } catch (err) {
+      console.error("Erreur lors de l'ajout :", err);
+    }
+  };
 
   useEffect(() => {
     setDisplayData([...data]);
@@ -64,10 +75,16 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
     setTempData({});
   };
 
-  const handleSaveEdit = (rowIndex) => {
-    console.log("Données sauvegardées:", tempData);
-    setEditingRow(null);
-    setTempData({});
+  const handleSaveEdit = async (rowId) => {
+    try {
+      if (onDataChange) {
+        await onDataChange(rowId, tempData);
+      }
+      setEditingRow(null);
+      setTempData({});
+    } catch (err) {
+      console.error("Erreur lors de la sauvegarde :", err);
+    }
   };
 
   const handleInputChange = (header, value) => {
@@ -154,8 +171,12 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
                           id="input_modifier"
                           type="text"
                           value={
-                            tempData[header.toLowerCase()] ||
-                            item[header.toLowerCase()]
+                            Object.prototype.hasOwnProperty.call(
+                              tempData,
+                              header.toLowerCase()
+                            )
+                              ? tempData[header.toLowerCase()]
+                              : item[header.toLowerCase()]
                           }
                           onChange={(e) =>
                             handleInputChange(
@@ -197,7 +218,10 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
                   <td>
                     <button
                       className="supprimer"
-                      onClick={() => setShowSupCrud(true)}
+                      onClick={() => {
+                        setSelectedIdToDelete(item.id);
+                        setShowSupCrud(true);
+                      }}
                     >
                       <i className="fa fa-trash"></i>
                     </button>
@@ -213,10 +237,25 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
           titre_ajout={titre}
           setShowAjoutCrud={setShowAjoutCrud}
           headers={headers}
+          onAddData={handleAddData}
         />
       )}
       {showSupCrud && (
-        <SupprimerCrud titre_sup={titre} setShowSupCrud={setShowSupCrud} />
+        <SupprimerCrud
+          titre_sup={titre}
+          setShowSupCrud={setShowSupCrud}
+          onConfirmDelete={async () => {
+            try {
+              if (onDataChange && selectedIdToDelete !== null) {
+                await onDataChange(selectedIdToDelete, null);
+                setSelectedIdToDelete(null);
+              }
+              setShowSupCrud(false);
+            } catch (error) {
+              console.error("Erreur lors de la suppression :", error);
+            }
+          }}
+        />
       )}
     </div>
   );
