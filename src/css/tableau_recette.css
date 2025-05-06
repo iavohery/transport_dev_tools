@@ -10,16 +10,20 @@
     padding-top: 60px;
 }
 .Tableau_recette h2{
-    margin-bottom: 60px;
+    margin-bottom: 20px;
     /* margin-top: 100px; */
     font-size: 17px;
     color: var(--bleu-marine);
 }
 .Tableau_recette table {
-  width: 93%;
+  width: 100%;
   font-size: 14px;
   border-collapse: collapse;
   transition: all 0.3s;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.162);
+  border: 1px solid var(--gris-clair);
+  border-radius: 10px;
+  overflow: hidden;
 }
 .Tableau_recette table tr {
   height: 45px;
@@ -35,4 +39,59 @@
   font-size: 13px;
   font-weight: 600;
   transition: all 0.3s;
+}
+.recherche_recette{
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.162);
+  border: 1px solid var(--gris-clair);
+display: flex;
+align-items: center;
+width: 100%;
+flex-direction: row;
+justify-content: center;
+height: auto;
+border-radius: 10px;
+transform: translateY(-0px);
+gap: 15px;
+padding-top: 20px;
+padding-bottom: 20px;
+}
+.recherche_recette .input-date input,.recherche_recette select{
+  width: 120px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  color: white;
+  
+  border: none;
+  background-color: transparent;
+  border-bottom: 1px solid var(--bleu-marine);
+  color: var(--bleu-marine);
+  padding-left: 10px;
+  padding-right: 0px;
+}
+.recherche_recette button{
+  /* transform: translateY(-40px); */
+  background-color: var(--bleu-marine);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.3s;
+  border: none;
+  outline: none;
+}
+.recherche_recette button.disabled-button{
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.recherche_recette button.disabled-button:hover{
+  width: 30px;
+  border-radius: 50%;
+}
+.recherche_recette button:hover{
+  width: 50px;
+  border-radius: 20px;
 }

@@ -27,7 +27,7 @@ function Reserver() {
         />
       )}
 
-      <Mail />
+      {/* <Mail /> */}
     </div>
   );
 }
