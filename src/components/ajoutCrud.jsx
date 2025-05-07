@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 import "../css/crud.css";
 import "font-awesome/css/font-awesome.min.css";
 
@@ -38,13 +37,12 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
       <div className="floucrud1">
         <h2>Nouvelle {titre_ajout}</h2>
         <form onSubmit={handleSubmit}>
-          {headers.map((header, index) => {
-            const inputType = getInputType(header);
-            const inputName = header.toLowerCase().replace(/\s+/g, "_");
+          {headers.map(({ key, label }, index) => {
+            const inputType = getInputType(key);
 
             return (
               <div key={index} className="form-group__">
-                <label>{header} :</label>
+                <label>{label} :</label>
                 <input
                   id="input__"
                   type={isCinField ? "text" : inputType}
@@ -67,7 +65,7 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
             >
               Annuler
             </button>
-            <button id="ajouter_ajout">Ajouter</button>
+            <button id="ajouter_ajout" type="submit">Ajouter</button>
           </div>
         </form>
       </div>
@@ -75,16 +73,15 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
   );
 }
 
-// Fonction utilitaire à l’extérieur
-function getInputType(headerText) {
-  const lowerHeader = headerText.toLowerCase();
-  if (/(date|naissance|anniversaire)/.test(lowerHeader)) return "date";
-  if (/(montant|prix|quantité|quantite|nombre)/.test(lowerHeader))
-    return "number";
-  if (/(email|e-mail|courriel|mail)/.test(lowerHeader)) return "email";
-  if (/(tel|phone|téléphone|telephone)/.test(lowerHeader)) return "tel";
-  if (/(url|site|web|link)/.test(lowerHeader)) return "url";
-  if (/(password|motdepasse|mdp)/.test(lowerHeader)) return "password";
+// Utilise la clé pour deviner le type d'input
+function getInputType(headerKey) {
+  const key = headerKey.toLowerCase();
+  if (/(date|naissance|anniversaire)/.test(key)) return "date";
+  if (/(montant|prix|quantité|quantite|nombre|id)/.test(key)) return "number";
+  if (/(email|e-mail|courriel|mail)/.test(key)) return "email";
+  if (/(tel|phone|téléphone|telephone)/.test(key)) return "tel";
+  if (/(url|site|web|link)/.test(key)) return "url";
+  if (/(password|motdepasse|mdp)/.test(key)) return "password";
   return "text";
 }
 

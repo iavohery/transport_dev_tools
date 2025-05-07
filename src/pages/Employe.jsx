@@ -40,7 +40,13 @@ function Employee() {
       <NavBarPage />
       <Crud
         titre="Liste des employees"
-        headers={["ID", "salaire", "date_embauche", "iduser", "idposte"]}
+        headers={[
+          { key: "id", label: "ID" },
+          { key: "salaire", label: "Salaire" },
+          { key: "date_embauche", label: "Date d'Embauche" },
+          { key: "iduser", label: "Nom" },
+          { key: "idposte", label: "Poste" },
+        ]}
         data={Employee}
         onDataChange={async (id, newData) => {
           try {

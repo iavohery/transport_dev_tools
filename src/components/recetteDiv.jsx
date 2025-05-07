@@ -1,6 +1,12 @@
-import { forwardRef, useState } from "react";
+import { forwardRef,useEffect, useState } from "react";
 import "../css/recetteDiv.css";
 import Tableau_recette from "./tableau_recette";
+import {
+  PaiementsParJour,
+  DepensesParJour,
+  VoyagesParJour
+} from "../assets/servicRoute/dashboard";
+
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -23,50 +29,51 @@ ChartJS.register(
   Legend
 );
 
-const RecetteDiv = forwardRef((props, ref) => {
-  // Données pour chaque section
-  const [dataSections, setDataSections] = useState({
-    chiffreAffaire: [
-      { date: "01/01/2023", valeur: 1500 },
-      { date: "02/01/2023", valeur: 2100 },
-      { date: "03/01/2023", valeur: 1800 },
-       { date: "01/01/2023", valeur: 1500 },
-      { date: "02/01/2023", valeur: 2100 },
-      { date: "03/01/2023", valeur: 1800 },
-    ],
-    depenses: [
-      { date: "01/01/2023", valeur: 500 },
-      { date: "02/01/2023", valeur: 700 },
-      { date: "03/01/2023", valeur: 600 },
-       { date: "01/01/2023", valeur: 1500 },
-      { date: "02/01/2023", valeur: 2100 },
-      { date: "03/01/2023", valeur: 1800 },
-    ],
-    benefice: [
-      { date: "01/01/2023", valeur: 1000 },
-      { date: "02/01/2023", valeur: 1400 },
-      { date: "03/01/2023", valeur: 1200 },
-       { date: "01/01/2023", valeur: 1500 },
-      { date: "02/01/2023", valeur: 2100 },
-      { date: "03/01/2023", valeur: 1800 },
-    ],
-    trajet: [
-      { date: "01/01/2023", valeur: 30 },
-      { date: "02/01/2023", valeur: 45 },
-      { date: "03/01/2023", valeur: 25 },
-       { date: "01/01/2023", valeur: 1500 },
-      { date: "02/01/2023", valeur: 2100 },
-      { date: "03/01/2023", valeur: 1800 },
-    ],
-  });
+  const RecetteDiv = forwardRef((props, ref) => {
+    const [dataSections, setDataSections] = useState({
+      chiffreAffaire: [],
+      depenses: [],
+      benefice: [],
+      trajet: [],
+    });
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const paiementsResponse = await PaiementsParJour();
+          const depensesResponse = await DepensesParJour();
+          const voyagesResponse = await VoyagesParJour();
+  
+          console.log("Paiements:", paiementsResponse.data);
+          console.log("Dépenses:", depensesResponse.data);
+          console.log("Voyages:", voyagesResponse.data);
+  
+          setDataSections({
+            chiffreAffaire: paiementsResponse.data.paiementsParJour,
+            depenses: depensesResponse.data.depensesParJour,
+            benefice: paiementsResponse.data.paiementsParJour.map((p, i) => ({
+              jour: p.jour,
+              total:
+                p.total -
+                (depensesResponse.data.depensesParJour[i]?.total || 0),
+            })),
+            trajet: voyagesResponse.data.voyagesParJour,
+          });
+        } catch (error) {
+          console.error("Erreur lors de la récupération des données :", error);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
   const getChartConfig = (sectionData, title, color) => ({
     data: {
-      labels: sectionData.map((item) => item.date),
+      labels: sectionData.map((item) => item.jour),
       datasets: [
         {
           label: title,
-          data: sectionData.map((item) => item.valeur),
+          data: sectionData.map((item) => item.total),
           borderColor: color,
           backgroundColor: color.replace("1)", "0.2)"),
           tension: 0.3,
@@ -122,7 +129,7 @@ const RecetteDiv = forwardRef((props, ref) => {
       dataKey: "trajet",
     },
   ];
-
+ 
   return (
     <div className="recetteDiv" ref={ref}>
       {sections.map((section) => {

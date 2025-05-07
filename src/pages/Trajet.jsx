@@ -39,7 +39,12 @@ function Trajet() {
       <NavBarPage />
       <Crud
         titre="Liste des Voitures"
-        headers={["ID", "Point_depart", "Destination", "Tarif"]}
+        headers={[
+          { key: "id", label: "ID" },
+          { key: "point_depart", label: "Point de Depart" },
+          { key: "destination", label: "Destination" },
+          { key: "tarif", label: "Tarif du Trajet" },
+        ]}
         data={Trajet}
         onDataChange={async (id, newData) => {
           try {

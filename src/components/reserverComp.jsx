@@ -243,27 +243,27 @@ function ReserverComp({ setShowPayment, setReservationData }) {
         )}
 
         {hasSearched && voituresDisponibles.length > 0 && (
-        <>
-          {/* {voituresDisponibles.map((voiture) => ( */}
-          <Voiture_dispo
-            // key={voiture.id}
-            setShowPayment={setShowPayment}
-            setReservationData={setReservationData}
-            maxPlaces={travelers}
-            occupiedPlaces={occupiedPlaces}
-            totalPlaces={16}
-            trajet={{
-              depart: departure,
-              arrivee: arrival,
-              heureDepart: timeOfDay,
-              prixUnitaire: prix,
-            }}
+          <>
+            {/* {voituresDisponibles.map((voiture) => ( */}
+            <Voiture_dispo
+              // key={voiture.id}
+              setShowPayment={setShowPayment}
+              setReservationData={setReservationData}
+              maxPlaces={travelers}
+              occupiedPlaces={occupiedPlaces}
+              totalPlaces={16}
+              trajet={{
+                depart: departure,
+                arrivee: arrival,
+                heureDepart: timeOfDay,
+                prixUnitaire: prix,
+              }}
 
-            // data={voiture}
-          />
-          {/* ))} */}
-        </>
-         )}
+              // data={voiture}
+            />
+            {/* ))} */}
+          </>
+        )}
       </div>
     </div>
   );

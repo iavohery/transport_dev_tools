@@ -37,7 +37,10 @@ function Poste() {
       <NavBarPage />
       <Crud
         titre="Liste des Voitures"
-        headers={["ID", "Nom_poste"]}
+        headers={[
+          { key: "id", label: "ID" },
+          { key: "nom_poste", label: "Nom du Poste" },
+        ]}
         data={Poste}
         onDataChange={async (id, newData) => {
           try {

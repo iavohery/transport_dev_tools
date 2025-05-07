@@ -24,14 +24,9 @@ function Utilisateur() {
           numtel: v.numtel,
           mot_passe: v.mot_passe,
         }));
-        console.log(formatted);
-
         setUtilisateur(formatted);
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des l'utilisateur :",
-          error
-        );
+        console.error("Erreur lors de la récupération des utilisateurs :", error);
       }
     };
 
@@ -42,15 +37,20 @@ function Utilisateur() {
     <div>
       <NavBarPage />
       <Crud
-        titre="Liste des utilisateurs"
-        headers={["ID", "Nom", "numcin", "numtel", "mot_passe"]}
+        titre="utilisateur"
+        headers={[
+          { key: "id", label: "ID" },
+          { key: "nom", label: "Nom" },
+          { key: "numcin", label: "Numéro CIN" },
+          { key: "numtel", label: "Numéro Téléphone" },
+          { key: "mot_passe", label: "Mot de passe" },
+        ]}
         data={Trajet}
         onDataChange={async (id, newData) => {
           try {
             if (newData === null) {
               await DeleteUtilisateur(id);
             } else {
-              // Transformation des données dans le format attendu par l'API
               const utilisateurPayload = {
                 nom: newData.nom,
                 numcin: newData.numcin,
@@ -59,14 +59,12 @@ function Utilisateur() {
               };
 
               if (id === null) {
-                console.log(utilisateurPayload);
                 await AjouterUtilisateur(utilisateurPayload);
               } else {
                 await UpdateUtilisateur(id, utilisateurPayload);
               }
             }
 
-            // Recharge des données
             const response = await GetUtilisateur();
             const data = response.data.data;
             const formatted = data.map((v) => ({
@@ -83,8 +81,7 @@ function Utilisateur() {
         }}
         onDelete={async (id) => {
           try {
-            await DeleteUtilisateur(id); // appelle ton service API
-            // Recharge les données après suppression
+            await DeleteUtilisateur(id);
             const response = await GetUtilisateur();
             const data = response.data.data;
             const formatted = data.map((v) => ({
