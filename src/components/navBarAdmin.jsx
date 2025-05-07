@@ -72,7 +72,7 @@ function NavBarAdmin({ setShowDeco }) {
           </li>
           <li>
             <Link className="link" to="/Voyage">
-              <i className="fa fa-plane-departure"></i>
+              <i className="fa fa-car-alt"></i>
               Voyage
             </Link>
           </li>

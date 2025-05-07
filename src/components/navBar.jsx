@@ -8,7 +8,6 @@ function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [param, setParam] = useState(false);
   const [showAide, setShowAide] = useState(false);
   const paramRef = useRef(null);
@@ -36,18 +35,6 @@ function NavBar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [param]);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
-  }, [darkMode]);
 
   const toggleParam = () => {
     setParam(!param);
@@ -111,13 +98,6 @@ function NavBar() {
             <label>Mode :</label>
             <button
               id="mode"
-              className={darkMode ? "active" : ""}
-              onClick={toggleDarkMode}
-              aria-label={
-                darkMode
-                  ? "Désactiver le mode sombre"
-                  : "Activer le mode sombre"
-              }
             ></button>
           </div>
           <div className="bas-gear-1">
