@@ -1,6 +1,7 @@
 const Voiture = require("../Modele/voiture");
 const Voyage = require("../Modele/voyage");
 const Trajet = require("../Modele/trajet");
+const Place = require("../Controler/place");
 
 // CREATE
 exports.createVoiture = async (req, res) => {
@@ -8,19 +9,26 @@ exports.createVoiture = async (req, res) => {
     const { numero_matricule, numero, marque, capacite } = req.body;
     console.log("Données reçues :", req.body);
 
-    const create = await Voiture.create({
+    const voiture = await Voiture.create({
       numero_matricule,
       numero,
       marque,
       capacite,
     });
 
-    res.status(201).json(create);
+    for (let i = 1; i <= capacite; i++) {
+      await Place.createPlace({
+        numplace: i,
+        idvoiture: voiture.idvoiture,
+      });
+    }
+
+    res.status(201).json(voiture);
   } catch (error) {
     console.error("Erreur lors de la création :", error);
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la création de la voiture." });
+    res.status(500).json({
+      error: "Erreur lors de la création de la voiture.",
+    });
   }
 };
 
@@ -130,4 +138,4 @@ exports.getAllVoiture = async (req, res) => {
 //     console.error("Erreur lors de la recherche :", error);
 //     return res.status(500).json({ message: "Erreur lors de la recherche" });
 //   }
-// };
+// }

@@ -1,25 +1,23 @@
-const Place = require('../Modele/place');
-const Voiture = require('../Modele/voiture');
-const Voyage = require('../Modele/voyage');
-const Trajet = require('../Modele/trajet');
-const Reserver = require('../Modele/reserver');
+const Place = require("../Modele/place");
+const Voiture = require("../Modele/voiture");
+const Voyage = require("../Modele/voyage");
+const Trajet = require("../Modele/trajet");
+const Reserver = require("../Modele/reserver");
 
 // CREATE
-exports.createPlace = async (req, res) => {
+exports.createPlace = async ({ numplace, idvoiture }) => {
   try {
-    const { numplace, statut, idvoiture } = req.body;
-    console.log("Données reçues :", req.body);
+    console.log("Données reçues :", { numplace, idvoiture });
 
     const create = await Place.create({
       numplace,
-      statut,
       idvoiture,
     });
 
-    res.status(201).json(create);
+    console.log("création de la place avecsucce:", create);
   } catch (error) {
-    console.error("Erreur lors de la création :", error);
-    res.status(500).json({ error: "Erreur lors de la création de la place." });
+    console.error("Erreur lors de la création de la place :", error);
+    throw err;
   }
 };
 
@@ -36,7 +34,6 @@ exports.updatePlace = async (req, res) => {
 
     await existPlace.update({
       numplace,
-      statut,
       idvoiture,
     });
 
@@ -46,7 +43,9 @@ exports.updatePlace = async (req, res) => {
     });
   } catch (error) {
     console.error("Erreur lors de la mise à jour :", error);
-    return res.status(500).json({ error: "Erreur lors de la mise à jour de la place." });
+    return res
+      .status(500)
+      .json({ error: "Erreur lors de la mise à jour de la place." });
   }
 };
 
@@ -75,10 +74,10 @@ exports.deletePlace = async (req, res) => {
 exports.getAllPlace = async (req, res) => {
   try {
     const places = await Place.findAll({
-      order: [['idplace', 'DESC']],
+      order: [["idplace", "DESC"]],
       include: {
         model: Voiture,
-        attributes: ['idvoiture', 'numero_matricule', 'marque'],
+        attributes: ["idvoiture", "numero_matricule", "marque"],
       },
     });
 
@@ -88,7 +87,9 @@ exports.getAllPlace = async (req, res) => {
     });
   } catch (error) {
     console.error("Erreur lors de la récupération :", error);
-    return res.status(500).json({ message: "Erreur lors de la récupération des places" });
+    return res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des places" });
   }
 };
 
@@ -135,10 +136,10 @@ exports.getVoituresAvecPlacesOccupees = async (req, res) => {
               required: true,
               where: {
                 point_depart: point_depart,
-                destination: destination
-              }
-            }
-          ]
+                destination: destination,
+              },
+            },
+          ],
         },
         {
           model: Place,
@@ -148,19 +149,18 @@ exports.getVoituresAvecPlacesOccupees = async (req, res) => {
               model: Reserver,
               required: true, // ✅ Place doit être réservée
               where: {
-                date: date
-              }
-            }
-          ]
-        }
-      ]
+                date: date,
+              },
+            },
+          ],
+        },
+      ],
     });
 
     return res.status(200).json({
       message: "Voitures avec places occupées récupérées avec succès",
-      data: voitures
+      data: voitures,
     });
-
   } catch (error) {
     console.error("Erreur lors de la récupération :", error);
     return res.status(500).json({ message: "Erreur serveur" });

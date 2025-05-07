@@ -1,18 +1,20 @@
-const Paiment = require("../Modele/paiement");
 const Posseder = require("../Modele/posseder");
 const Reserver = require("../Modele/reserver");
 const Colis = require("../Modele/colis");
+const Paiement = require("../Modele/paiement");
+const Utilisateur = require("../Modele/utilisateur");
 
 // CREATE
 exports.createPaiment = async (req, res) => {
   try {
-    const { montant_total, mode_paiment, statut } = req.body;
+    const { montant_total, mode_paiment, statut, date } = req.body;
     console.log("Données reçues :", req.body);
 
-    const create = await Paiment.create({
+    const create = await Paiement.create({
       montant_total,
       mode_paiment,
       statut,
+      date,
     });
 
     res.status(201).json(create);
@@ -26,23 +28,22 @@ exports.createPaiment = async (req, res) => {
 exports.updatePaiement = async (req, res) => {
   try {
     const { id } = req.params;
-    const { point_depart, destination, heure_depart, tarif } = req.body;
-
-    const existTrajet = await Trajet.findByPk(id);
-    if (!existTrajet) {
-      return res.status(404).json({ error: "Trajet non trouvé" });
+    const { montant_total, mode_paiment, statut, date } = req.body;
+    const paiement = await Paiement.findByPk(id);
+    if (!paiement) {
+      return res.status(404).json({ error: "Paiement non trouvé" });
     }
 
-    await existTrajet.update({
-      point_depart,
-      destination,
-      heure_depart,
-      tarif,
+    await paiement.update({
+      montant_total,
+      mode_paiment,
+      statut,
+      date,
     });
 
     return res.status(200).json({
       message: "Mise à jour effectuée avec succès",
-      data: existTrajet,
+      data: paiement,
     });
   } catch (error) {
     console.error("Erreur lors de la mise à jour :", error);
@@ -57,36 +58,47 @@ exports.deletePaiement = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const trajet = await Trajet.findByPk(id);
-    if (!trajet) {
-      return res.status(404).json({ message: "Trajet introuvable" });
+    const paiement = await Paiement.findByPk(id);
+    if (!paiement) {
+      return res.status(404).json({ message: "Paiement introuvable" });
     }
 
-    console.log("Trajet à supprimer :", trajet);
+    await paiement.destroy();
 
-    await trajet.destroy();
-
-    return res.status(200).json({ message: "Trajet supprimé avec succès" });
+    return res.status(200).json({ message: "Paiement supprimé avec succès" });
   } catch (error) {
     console.error("Erreur lors de la suppression :", error);
     return res.status(500).json({ message: "Erreur lors de la suppression" });
   }
 };
 
+exports.getAllPaiement = async (req, res) => {
+  try {
+    const paiement = await Paiement.findAll({
+      order: [["idpaiement", "DESC"]],
+    });
+
+    return res.status(200).json({
+      message: "Liste des paiement récupérée avec succès",
+      data: paiement,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération :", error);
+    return res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des paiements" });
+  }
+};
+
 // GET ALL
-exports.getAllPaiment = async (req, res) => {
+exports.getAllPaimentPosseder = async (req, res) => {
   try {
     const posseders = await Posseder.findAll({
-      order: [["idp", "DESC"]],
+      order: [["id", "DESC"]],
       include: [
         {
-          model: Paiment,
-          attributes: [
-            "idpaiement",
-            "montant_total",
-            "mode_paiement",
-            "statut",
-          ],
+          model: Paiement,
+          attributes: ["idpaiement", "montant_total", "mode_paiment", "statut"],
         },
         {
           model: Reserver,
@@ -101,12 +113,6 @@ exports.getAllPaiment = async (req, res) => {
         {
           model: Colis,
           attributes: ["idcolis", "type"],
-          include: [
-            {
-              model: Utilisateur,
-              attributes: ["nom"],
-            },
-          ],
         },
       ],
     });
