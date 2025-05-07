@@ -1,29 +1,31 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const port = 3000;
 const cors = require('cors');
 
-
-const { sequelize } = require('./Modele/index');
-
 app.use(cors());
 app.use(express.json());
 
-const userroute = require('./route/route');
-app.use('/api', userroute);
+const { sequelize } = require("./Modele/index");
 
-app.get('/', (req, res) => {
-  res.send('Hello World depuis Express avec Sequelize !');
+app.use(express.json());
+
+const userroute = require("./route/route");
+app.use("/api", userroute);
+
+app.get("/", (req, res) => {
+  res.send("Hello World depuis Express avec Sequelize !");
 });
 
 // Synchronisation DB + Démarrage du serveur
-sequelize.sync({ alter: true })
+sequelize
+  .sync({ alter: true })
   .then(() => {
-    console.log('Connexion à la base de données réussie et synchronisée');
+    console.log("Connexion à la base de données réussie et synchronisée");
     app.listen(port, () => {
       console.log(`Serveur lancé sur http://localhost:${port}`);
     });
   })
-  .catch(err => {
-    console.error('Erreur de connexion à la base de données :', err);
+  .catch((err) => {
+    console.error("Erreur de connexion à la base de données :", err);
   });

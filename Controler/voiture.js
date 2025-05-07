@@ -1,6 +1,6 @@
-const Voiture = require('../Modele/voiture');
-const Voyage = require('../Modele/voyage');
-const Trajet = require('../Modele/trajet');
+const Voiture = require("../Modele/voiture");
+const Voyage = require("../Modele/voyage");
+const Trajet = require("../Modele/trajet");
 
 // CREATE
 exports.createVoiture = async (req, res) => {
@@ -12,13 +12,15 @@ exports.createVoiture = async (req, res) => {
       numero_matricule,
       numero,
       marque,
-      capacite
+      capacite,
     });
 
     res.status(201).json(create);
   } catch (error) {
     console.error("Erreur lors de la création :", error);
-    res.status(500).json({ error: "Erreur lors de la création de la voiture." });
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la création de la voiture." });
   }
 };
 
@@ -37,7 +39,7 @@ exports.updateVoiture = async (req, res) => {
       numero_matricule,
       numero,
       marque,
-      capacite
+      capacite,
     });
 
     return res.status(200).json({
@@ -46,7 +48,9 @@ exports.updateVoiture = async (req, res) => {
     });
   } catch (error) {
     console.error("Erreur lors de la mise à jour :", error);
-    return res.status(500).json({ error: "Erreur lors de la mise à jour de la voiture." });
+    return res
+      .status(500)
+      .json({ error: "Erreur lors de la mise à jour de la voiture." });
   }
 };
 
@@ -74,20 +78,26 @@ exports.deleteVoiture = async (req, res) => {
 // GET ALL
 exports.getAllVoiture = async (req, res) => {
   try {
-    const voitures = await Voiture.findAll({ 
-      order: [['idvoiture', 'DESC']],
-      attributes: ['idvoiture', 'numero_matricule', 'numero', 'marque', 'capacite'],
+    const voitures = await Voiture.findAll({
+      order: [["idvoiture", "DESC"]],
+      attributes: [
+        "idvoiture",
+        "numero_matricule",
+        "numero",
+        "marque",
+        "capacite",
+      ],
       include: [
         {
           model: Voyage,
           include: [
             {
               model: Trajet,
-              attributes: ['idtrajet', 'point_depart', 'destination', 'heure_depart', 'tarif'],
-            }
-          ]
-        }
-      ]
+              attributes: ["idtrajet", "point_depart", "destination", "tarif"],
+            },
+          ],
+        },
+      ],
     });
 
     return res.status(200).json({
@@ -99,7 +109,6 @@ exports.getAllVoiture = async (req, res) => {
     return res.status(500).json({ message: "Erreur lors de la récupération" });
   }
 };
-
 
 // GET BY ID
 // exports.getVoitureById = async (req, res) => {
