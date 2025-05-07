@@ -1,17 +1,19 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import "../css/crud.css";
-import "font-awesome/css/font-awesome.min.css";
-
-function SupprimerCrud({ titre_sup, setShowSupCrud }) {
-  
+function SupprimerCrud({ titre_sup, setShowSupCrud, onConfirmDelete }) {
   return (
     <div className="floucrud">
       <div className="floucrud1_2">
-        <h2>Voulez vous supprimer cet {titre_sup} ?</h2>
-        <p>Cet élément va être supprimé définitivement</p>
+        <h2>Voulez-vous supprimer cet {titre_sup} ?</h2>
+        <p>Ce {titre_sup} va être supprimé définitivement.</p>
         <div className="btn_supprimer">
-          <button id="oui_sup" onClick={() =>{ setShowSupCrud(false)}}>OUI</button>
+          <button
+            id="oui_sup"
+            onClick={() => {
+              console.log("Suppression demandée !");
+              onConfirmDelete();
+            }}
+          >
+            OUI
+          </button>
           <button id="non_sup" onClick={() => setShowSupCrud(false)}>
             NON
           </button>

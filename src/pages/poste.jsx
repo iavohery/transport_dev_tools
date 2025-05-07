@@ -2,36 +2,34 @@ import { useEffect, useState } from "react";
 import Crud from "../components/crud";
 import NavBarPage from "../components/navBarPage";
 import {
-  GetTrajet,
-  UpdateTrajet,
-  DeleteTrajet,
-  AjouterTrajet,
-} from "../assets/servicRoute/trajet.service";
+  GetPoste,
+  UpdatePoste,
+  DeletePoste,
+  AjouterPoste,
+} from "../assets/servicRoute/poste.service";
 
-function Trajet() {
-  const [Trajet, setTrajet] = useState([]);
+function Poste() {
+  const [Poste, setPoste] = useState([]);
 
   useEffect(() => {
-    const fetchVoitures = async () => {
+    const fetchPoste = async () => {
       try {
-        const response = await GetTrajet();
+        const response = await GetPoste();
         const data = response.data.data;
 
         const formatted = data.map((v) => ({
-          id: v.idtrajet,
-          point_depart: v.point_depart,
-          destination: v.destination,
-          tarif: v.tarif,
+          id: v.idposte,
+          nom_poste: v.nom_poste,
         }));
         console.log(formatted);
 
-        setTrajet(formatted);
+        setPoste(formatted);
       } catch (error) {
         console.error("Erreur lors de la récupération des trajet :", error);
       }
     };
 
-    fetchVoitures();
+    fetchPoste();
   }, []);
 
   return (
@@ -41,57 +39,49 @@ function Trajet() {
         titre="Liste des Voitures"
         headers={[
           { key: "id", label: "ID" },
-          { key: "point_depart", label: "Point de Depart" },
-          { key: "destination", label: "Destination" },
-          { key: "tarif", label: "Tarif du Trajet" },
+          { key: "nom_poste", label: "Nom du Poste" },
         ]}
-        data={Trajet}
+        data={Poste}
         onDataChange={async (id, newData) => {
           try {
             if (newData === null) {
-              await DeleteTrajet(id);
+              await DeletePoste(id);
             } else {
               // Transformation des données dans le format attendu par l'API
               const trajetPayload = {
-                point_depart: newData.point_depart,
-                destination: newData.destination,
-                tarif: parseInt(newData.tarif),
+                nom_poste: newData.nom_poste,
               };
 
               if (id === null) {
-                await AjouterTrajet(trajetPayload);
+                await AjouterPoste(trajetPayload);
               } else {
-                await UpdateTrajet(id, trajetPayload);
+                await UpdatePoste(id, trajetPayload);
               }
             }
 
             // Recharge des données
-            const response = await GetTrajet();
+            const response = await GetPoste();
             const data = response.data.data;
             const formatted = data.map((v) => ({
-              id: v.idtrajet,
-              point_depart: v.point_depart,
-              destination: v.destination,
-              tarif: v.tarif,
+              id: v.idposte,
+              nom_poste: v.nom_poste,
             }));
-            setTrajet(formatted);
+            setPoste(formatted);
           } catch (error) {
             console.error("Erreur lors de l'opération CRUD :", error);
           }
         }}
         onDelete={async (id) => {
           try {
-            await DeleteTrajet(id); // appelle ton service API
+            await DeletePoste(id); // appelle ton service API
             // Recharge les données après suppression
-            const response = await GetTrajet();
+            const response = await GetPoste();
             const data = response.data.data;
             const formatted = data.map((v) => ({
-              id: v.idtrajet,
-              point_depart: v.point_depart,
-              destination: v.destination,
-              tarif: v.tarif,
+              id: v.idposte,
+              nom_poste: v.nom_poste,
             }));
-            setTrajet(formatted);
+            setPoste(formatted);
           } catch (error) {
             console.error("Erreur lors de la suppression :", error);
           }
@@ -101,4 +91,4 @@ function Trajet() {
   );
 }
 
-export default Trajet;
+export default Poste;

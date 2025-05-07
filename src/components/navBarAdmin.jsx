@@ -59,9 +59,33 @@ function NavBarAdmin({ setShowDeco }) {
             </Link>
           </li>
           <li>
+            <Link className="link" to="/Poste">
+              <i className="fa fa-briefcase"></i>
+              Poste
+            </Link>
+          </li>
+          <li>
             <Link className="link" to="/Trajet">
               <i className="fa fa-location-arrow"></i>
               Trajet
+            </Link>
+          </li>
+          <li>
+            <Link className="link" to="/Voyage">
+              <i className="fa fa-location-arrow"></i>
+              Voyage
+            </Link>
+          </li>
+          <li>
+            <Link className="link" to="/Voyage">
+              <i className="fa fa-location-arrow"></i>
+              Paiement
+            </Link>
+          </li>
+          <li>
+            <Link className="link" to="/Voyage">
+              <i className="fa fa-location-arrow"></i>
+              Paiement
             </Link>
           </li>
         </ul>

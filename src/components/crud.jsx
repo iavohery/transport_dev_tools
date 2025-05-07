@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
 import "../css/crud.css";
 import AjoutCrud from "./ajoutCrud";
 import SupprimerCrud from "./supprimerCrud";
 
-function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
+function Crud({ titre, headers = [], data = [], onDataChange }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showAjoutCrud, setShowAjoutCrud] = useState(false);
@@ -13,12 +12,22 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
   const [tempData, setTempData] = useState({});
   const [displayData, setDisplayData] = useState([]);
   const [highlightedRow, setHighlightedRow] = useState(null);
+  const [selectedIdToDelete, setSelectedIdToDelete] = useState(null);
+
+  const handleAddData = async (newItem) => {
+    try {
+      if (onDataChange) {
+        await onDataChange(null, newItem);
+      }
+    } catch (err) {
+      console.error("Erreur lors de l'ajout :", err);
+    }
+  };
 
   useEffect(() => {
     setDisplayData([...data]);
   }, [data]);
 
-  // Gestion de la surbrillance temporaire
   useEffect(() => {
     if (highlightedRow !== null) {
       const timer = setTimeout(() => {
@@ -30,8 +39,7 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
           newData.unshift(highlightedItem);
           setDisplayData(newData);
         }
-      }, 2000);
-
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [highlightedRow, data]);
@@ -44,7 +52,7 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
 
     const results = data.filter((item) =>
       Object.values(item).some((val) =>
-        val.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        val?.toString().toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
     setSearchResults(results);
@@ -54,8 +62,8 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
     setHighlightedRow(id);
   };
 
-  const handleEdit = (rowIndex, currentData) => {
-    setEditingRow(rowIndex);
+  const handleEdit = (rowId, currentData) => {
+    setEditingRow(rowId);
     setTempData(currentData);
   };
 
@@ -64,20 +72,25 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
     setTempData({});
   };
 
-  const handleSaveEdit = (rowIndex) => {
-    if (onUpdate) {
-      onUpdate(rowIndex, tempData);
-  }
-  setEditingRow(null);
-  setTempData({});
+  const handleSaveEdit = async (rowId) => {
+    try {
+      if (onDataChange) {
+        await onDataChange(rowId, tempData);
+      }
+      setEditingRow(null);
+      setTempData({});
+    } catch (err) {
+      console.error("Erreur lors de la sauvegarde :", err);
+    }
   };
 
-  const handleInputChange = (header, value) => {
+  const handleInputChange = (key, value) => {
     setTempData((prev) => ({
       ...prev,
-      [header]: value,
+      [key]: value,
     }));
   };
+
   return (
     <div className="ppp">
       <div className="crud_cont">
@@ -125,7 +138,6 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
                 )}
               </div>
             )}
-            {/* <button id="rech_btn"><i className="fa fa-search"></i></button> */}
             <button onClick={() => setShowAjoutCrud(true)}>
               <i className="fa fa-plus"></i> <span>Ajouter</span>
             </button>
@@ -135,8 +147,8 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
           <table>
             <thead>
               <tr>
-                {headers.map((header, index) => (
-                  <th key={index}>{header}</th>
+                {headers.map(({ label }, index) => (
+                  <th key={index}>{label}</th>
                 ))}
                 <th id="action" colSpan={2}>
                   Actions
@@ -149,25 +161,21 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
                   key={item.id}
                   className={highlightedRow === item.id ? "highlight-row" : ""}
                 >
-                  {headers.map((header, index) => (
+                  {headers.map(({ key }, index) => (
                     <td key={`data-${item.id}-${index}`}>
                       {editingRow === item.id ? (
                         <input
                           id="input_modifier"
                           type="text"
                           value={
-                            tempData[header.toLowerCase()] ||
-                            item[header.toLowerCase()]
+                            key in tempData ? tempData[key] : item[key] || ""
                           }
                           onChange={(e) =>
-                            handleInputChange(
-                              header.toLowerCase(),
-                              e.target.value
-                            )
+                            handleInputChange(key, e.target.value)
                           }
                         />
                       ) : (
-                        item[header.toLowerCase()]
+                        item[key]
                       )}
                     </td>
                   ))}
@@ -199,7 +207,10 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
                   <td>
                     <button
                       className="supprimer"
-                      onClick={() => {setShowSupCrud(true)}}
+                      onClick={() => {
+                        setSelectedIdToDelete(item.id);
+                        setShowSupCrud(true);
+                      }}
                     >
                       <i className="fa fa-trash"></i>
                     </button>
@@ -210,15 +221,31 @@ function Crud({ titre, headers = [], data = [], onDelete, onUpdate }) {
           </table>
         </div>
       </div>
+
       {showAjoutCrud && (
         <AjoutCrud
           titre_ajout={titre}
           setShowAjoutCrud={setShowAjoutCrud}
           headers={headers}
+          onAddData={handleAddData}
         />
       )}
       {showSupCrud && (
-        <SupprimerCrud titre_sup={titre} setShowSupCrud={setShowSupCrud} />
+        <SupprimerCrud
+          titre_sup={titre}
+          setShowSupCrud={setShowSupCrud}
+          onConfirmDelete={async () => {
+            try {
+              if (onDataChange && selectedIdToDelete !== null) {
+                await onDataChange(selectedIdToDelete, null);
+                setSelectedIdToDelete(null);
+              }
+              setShowSupCrud(false);
+            } catch (error) {
+              console.error("Erreur lors de la suppression :", error);
+            }
+          }}
+        />
       )}
     </div>
   );

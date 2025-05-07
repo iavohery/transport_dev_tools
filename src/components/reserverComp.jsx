@@ -57,7 +57,6 @@ function ReserverComp({ setShowPayment, setReservationData }) {
     }
   };
 
-
   return (
     <div className="centrereserver">
       <div className="centrereserver_1">
