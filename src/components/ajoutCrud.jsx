@@ -41,9 +41,10 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
                   placeholder={`Entrez ${header}`}
                   onChange={handleChange}
                   {...(inputType === "number" && { min: 0, step: "any" })}
-                  {...(inputType === "date" && {
-                    max: new Date().toISOString().split("T")[0],
-                  })}
+                  {...(inputType === "date" &&
+                    {
+                      // max: new Date().toISOString().split("T")[0],
+                    })}
                 />
               </div>
             );

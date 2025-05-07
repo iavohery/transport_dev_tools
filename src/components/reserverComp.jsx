@@ -120,9 +120,7 @@ function ReserverComp({ setShowPayment, setReservationData }) {
                 type="button"
                 className="travelers-btn"
                 onClick={() => handleTravelerChange("increment")}
-              >
-                +
-              </button>
+              ></button>
             </div>
           </div>
 

@@ -77,15 +77,15 @@ function NavBarAdmin({ setShowDeco }) {
             </Link>
           </li>
           <li>
-            <Link className="link" to="/Voyage">
+            <Link className="link" to="/Paiement">
               <i className="fa fa-location-arrow"></i>
               Paiement
             </Link>
           </li>
           <li>
-            <Link className="link" to="/Voyage">
+            <Link className="link" to="/Depense">
               <i className="fa fa-location-arrow"></i>
-              Paiement
+              Depense
             </Link>
           </li>
         </ul>

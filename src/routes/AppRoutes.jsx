@@ -13,6 +13,8 @@ import Trajet from "../pages/Trajet";
 import Recette from "../pages/Recette";
 import Poste from "../pages/poste";
 import Voyage from "../pages/voyage";
+import Paiement from "../pages/paiement";
+import Depense from "../pages/Depense";
 
 function AppRoutes() {
   return (
@@ -32,6 +34,8 @@ function AppRoutes() {
         <Route path="/Recette" element={<Recette />} />
         <Route path="/Poste" element={<Poste />} />
         <Route path="/Voyage" element={<Voyage />} />
+        <Route path="/Paiement" element={<Paiement />} />
+        <Route path="/Depense" element={<Depense />} />
       </Routes>
     </Router>
   );
