@@ -242,7 +242,7 @@ function ReserverComp({ setShowPayment, setReservationData }) {
           </div>
         )}
 
-        {/* {hasSearched && voituresDisponibles.length === 0 && ( */}
+        {hasSearched && voituresDisponibles.length > 0 && (
         <>
           {/* {voituresDisponibles.map((voiture) => ( */}
           <Voiture_dispo
@@ -263,7 +263,7 @@ function ReserverComp({ setShowPayment, setReservationData }) {
           />
           {/* ))} */}
         </>
-        {/* )} */}
+         )}
       </div>
     </div>
   );

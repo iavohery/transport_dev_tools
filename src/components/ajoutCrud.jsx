@@ -8,10 +8,21 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    // Vérifie si le champ est un CIN et limite à 12 chiffres
+    if (/(cin|cni|numéro d'identité|numero identite)/i.test(name)) {
+      const numericValue = value.replace(/\D/g, ""); // Supprime tout ce qui n'est pas un chiffre
+      if (numericValue.length > 12) return; // Ne dépasse pas 12 chiffres
+      setFormData((prev) => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -36,7 +47,7 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
                 <label>{header} :</label>
                 <input
                   id="input__"
-                  type={inputType}
+                  type={isCinField ? "text" : inputType}
                   name={inputName}
                   placeholder={`Entrez ${header}`}
                   onChange={handleChange}
