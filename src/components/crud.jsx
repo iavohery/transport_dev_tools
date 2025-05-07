@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "../css/crud.css";
 import AjoutCrud from "./ajoutCrud";
 import SupprimerCrud from "./supprimerCrud";
@@ -14,11 +13,11 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
   const [displayData, setDisplayData] = useState([]);
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [selectedIdToDelete, setSelectedIdToDelete] = useState(null);
+
   const handleAddData = async (newItem) => {
     try {
-      // Par exemple, si onDataChange(null, data) signifie "ajout"
       if (onDataChange) {
-        await onDataChange(null, newItem); // ou toute logique selon ton back
+        await onDataChange(null, newItem);
       }
     } catch (err) {
       console.error("Erreur lors de l'ajout :", err);
@@ -29,7 +28,6 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
     setDisplayData([...data]);
   }, [data]);
 
-  // Gestion de la surbrillance temporaire
   useEffect(() => {
     if (highlightedRow !== null) {
       const timer = setTimeout(() => {
@@ -42,7 +40,6 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
           setDisplayData(newData);
         }
       }, 3000);
-
       return () => clearTimeout(timer);
     }
   }, [highlightedRow, data]);
@@ -55,7 +52,7 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
 
     const results = data.filter((item) =>
       Object.values(item).some((val) =>
-        val.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        val?.toString().toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
     setSearchResults(results);
@@ -65,8 +62,8 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
     setHighlightedRow(id);
   };
 
-  const handleEdit = (rowIndex, currentData) => {
-    setEditingRow(rowIndex);
+  const handleEdit = (rowId, currentData) => {
+    setEditingRow(rowId);
     setTempData(currentData);
   };
 
@@ -87,12 +84,13 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
     }
   };
 
-  const handleInputChange = (header, value) => {
+  const handleInputChange = (key, value) => {
     setTempData((prev) => ({
       ...prev,
-      [header]: value,
+      [key]: value,
     }));
   };
+
   return (
     <div className="ppp">
       <div className="crud_cont">
@@ -140,7 +138,6 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
                 )}
               </div>
             )}
-            {/* <button id="rech_btn"><i className="fa fa-search"></i></button> */}
             <button onClick={() => setShowAjoutCrud(true)}>
               <i className="fa fa-plus"></i> <span>Ajouter</span>
             </button>
@@ -150,8 +147,8 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
           <table>
             <thead>
               <tr>
-                {headers.map((header, index) => (
-                  <th key={index}>{header}</th>
+                {headers.map(({ label }, index) => (
+                  <th key={index}>{label}</th>
                 ))}
                 <th id="action" colSpan={2}>
                   Actions
@@ -164,29 +161,21 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
                   key={item.id}
                   className={highlightedRow === item.id ? "highlight-row" : ""}
                 >
-                  {headers.map((header, index) => (
+                  {headers.map(({ key }, index) => (
                     <td key={`data-${item.id}-${index}`}>
                       {editingRow === item.id ? (
                         <input
                           id="input_modifier"
                           type="text"
                           value={
-                            Object.prototype.hasOwnProperty.call(
-                              tempData,
-                              header.toLowerCase()
-                            )
-                              ? tempData[header.toLowerCase()]
-                              : item[header.toLowerCase()]
+                            key in tempData ? tempData[key] : item[key] || ""
                           }
                           onChange={(e) =>
-                            handleInputChange(
-                              header.toLowerCase(),
-                              e.target.value
-                            )
+                            handleInputChange(key, e.target.value)
                           }
                         />
                       ) : (
-                        item[header.toLowerCase()]
+                        item[key]
                       )}
                     </td>
                   ))}
@@ -232,6 +221,7 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
           </table>
         </div>
       </div>
+
       {showAjoutCrud && (
         <AjoutCrud
           titre_ajout={titre}

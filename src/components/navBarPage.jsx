@@ -17,7 +17,7 @@ function NavBarPage() {
         </p>
         <Link to="/AdminPage">
           <button id="déco" onClick={() => setShowDeco(true)}>
-            <i class="fa fa-home"></i>
+            <i className="fa fa-home"></i>
             <span>Acceuil</span>
           </button>
         </Link>

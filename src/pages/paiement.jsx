@@ -40,7 +40,13 @@ function Paiement() {
       <NavBarPage />
       <Crud
         titre="Liste des paiement"
-        headers={["ID", "montant_total", "mode_paiment", "statut", "date"]}
+        headers={[
+          { key: "id", label: "ID" },
+          { key: "montant_total", label: "Montant à payer" },
+          { key: "mode_paiment", label: "Mode de paiement" },
+          { key: "statut", label: "Statut" },
+          { key: "date", label: "Date" },
+        ]}
         data={Paiement}
         onDataChange={async (id, newData) => {
           try {

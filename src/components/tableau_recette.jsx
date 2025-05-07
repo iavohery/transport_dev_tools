@@ -5,7 +5,7 @@ import "font-awesome/css/font-awesome.min.css";
 
 function Tableau_recette({
   data = [],
-  columns = ["Date", "Valeur"],
+  columns = ["Jour", "Total"],
   title = "Tableau représentatif",
 }) {
   const [searchType, setSearchType] = useState("jour");

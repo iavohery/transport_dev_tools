@@ -40,7 +40,13 @@ function Depense() {
       <NavBarPage />
       <Crud
         titre="Liste des depenses"
-        headers={["ID", "type", "montant", "idvoiture", "date"]}
+        headers={[
+          { key: "id", label: "ID" },
+          { key: "type", label: "Type" },
+          { key: "date", label: "Date" },
+          { key: "montant", label: "Montant depenser" },
+          { key: "idvoiture", label: "Id du voiture" },
+        ]}
         data={Depense}
         onDataChange={async (id, newData) => {
           try {

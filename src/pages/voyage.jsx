@@ -43,13 +43,13 @@ function Voyage() {
       <Crud
         titre="Liste des employees"
         headers={[
-          "ID",
-          "statut",
-          "heure_depart",
-          "idtrajet",
-          "idvoiture",
-          "idemploye",
-          "date",
+          { key: "id", label: "ID" },
+          { key: "statut", label: "Statut" },
+          { key: "heure_depart", label: "Heure de Depart" },
+          { key: "idtrajet", label: "Trajet" },
+          { key: "idvoiture", label: "Voiture" },
+          { key: "idemploye", label: "Chauffeur" },
+          { key: "date", label: "Date du Voyage" },
         ]}
         data={Employee}
         onDataChange={async (id, newData) => {

@@ -13,6 +13,8 @@ function ReserverComp({ setShowPayment, setReservationData }) {
   const [prixTotal, setPrixTotal] = useState(0);
   const [hasSearched, setHasSearched] = useState(false);
   const [voituresDisponibles, setVoituresDisponibles] = useState([]);
+  const occupiedPlaces = ["3", "5", "8", "11", "14"];
+  const prix = 20000;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -131,31 +133,31 @@ function ReserverComp({ setShowPayment, setReservationData }) {
                 <input
                   type="radio"
                   name="timeOfDay"
-                  value="morning"
-                  checked={timeOfDay === "morning"}
-                  onChange={() => setTimeOfDay("morning")}
+                  value="07:00"
+                  checked={timeOfDay === "07:00"}
+                  onChange={() => setTimeOfDay("07:00")}
                 />
-                Matin
+                Matin (07h)
               </label>
               <label>
                 <input
                   type="radio"
                   name="timeOfDay"
-                  value="afternoon"
-                  checked={timeOfDay === "afternoon"}
-                  onChange={() => setTimeOfDay("afternoon")}
+                  value="12:00"
+                  checked={timeOfDay === "12:00"}
+                  onChange={() => setTimeOfDay("12:00")}
                 />
-                Midi
+                Midi (12h)
               </label>
               <label>
                 <input
                   type="radio"
                   name="timeOfDay"
-                  value="evening"
-                  checked={timeOfDay === "evening"}
-                  onChange={() => setTimeOfDay("evening")}
+                  value="19:00"
+                  checked={timeOfDay === "19:00"}
+                  onChange={() => setTimeOfDay("19:00")}
                 />
-                Soir
+                Soir (19h)
               </label>
             </div>
           </div>
@@ -239,17 +241,26 @@ function ReserverComp({ setShowPayment, setReservationData }) {
         )}
 
         {hasSearched && voituresDisponibles.length > 0 && (
-          <>
-            {voituresDisponibles.map((voiture) => (
-              <Voiture_dispo
-                key={voiture.id}
-                setShowPayment={setShowPayment}
-                setReservationData={setReservationData}
-                maxPlaces={travelers}
-                data={voiture}
-              />
-            ))}
-          </>
+        <>
+          {/* {voituresDisponibles.map((voiture) => ( */}
+          <Voiture_dispo
+            // key={voiture.id}
+            setShowPayment={setShowPayment}
+            setReservationData={setReservationData}
+            maxPlaces={travelers}
+            occupiedPlaces={occupiedPlaces}
+            totalPlaces={16}
+            trajet={{
+              depart: departure,
+              arrivee: arrival,
+              heureDepart: timeOfDay,
+              prixUnitaire: prix,
+            }}
+
+            // data={voiture}
+          />
+          {/* ))} */}
+        </>
         )}
       </div>
     </div>
