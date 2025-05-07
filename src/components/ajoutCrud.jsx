@@ -7,11 +7,22 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  
+    if (/(numcin)/i.test(name)) {
+      const numericValue = value.replace(/\D/g, "");
+      if (numericValue.length > 12) return;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,26 +37,26 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
       <div className="floucrud1">
         <h2>Nouvelle {titre_ajout}</h2>
         <form onSubmit={handleSubmit}>
-          {headers.map(({ key, label }, index) => {
-            const inputType = getInputType(key);
+            {headers.map(({ key, label }, index) => {
+                const inputType = getInputType(key);
+                const isCinField = /(numcin)/i.test(key);
 
-            return (
-              <div key={index} className="form-group__">
-                <label>{label} :</label>
-                <input
-                  id="input__"
-                  type={inputType}
-                  name={key}
-                  placeholder={`Entrez ${label}`}
-                  onChange={handleChange}
-                  {...(inputType === "number" && { min: 0, step: "any" })}
-                  {...(inputType === "date" && {
-                    max: new Date().toISOString().split("T")[0],
-                  })}
-                />
-              </div>
-            );
-          })}
+                return (
+                  <div key={index} className="form-group__">
+                    <label>{label} :</label>
+                    <input
+                      id="input__"
+                      type={isCinField ? "text" : inputType}
+                      name={key}
+                      value={formData[key] || ""}
+                      placeholder={`Entrez ${label}`}
+                      onChange={handleChange}
+                      {...(inputType === "number" && { min: 0, step: "any" })}
+                    />
+                  </div>
+                );
+              })}
+
           <div className="btn_ajouter">
             <button
               id="annuler_ajout"
@@ -66,7 +77,7 @@ function AjoutCrud({ titre_ajout, setShowAjoutCrud, headers, onAddData }) {
 function getInputType(headerKey) {
   const key = headerKey.toLowerCase();
   if (/(date|naissance|anniversaire)/.test(key)) return "date";
-  if (/(montant|prix|quantité|quantite|nombre|id)/.test(key)) return "number";
+  if (/(montant|prix|quantité|quantite|nombre|id|capacite|salaire)/.test(key)) return "number";
   if (/(email|e-mail|courriel|mail)/.test(key)) return "email";
   if (/(tel|phone|téléphone|telephone)/.test(key)) return "tel";
   if (/(url|site|web|link)/.test(key)) return "url";
