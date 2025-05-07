@@ -24,68 +24,68 @@ function NavBarAdmin({ setShowDeco }) {
         <ul>
           <li>
             <Link className="link" to="/Recette">
-              <i className="fa fa-money-bill-wave"></i>
+              <i className="fa fa-cash-register"></i>
               Recette
             </Link>
           </li>
           <li>
             <Link className="link" to="/Reservation">
-              <i className="fa fa-calendar"></i>
+              <i className="fa fa-calendar-check"></i>
               Reservation
             </Link>
           </li>
           <li>
             <Link className="link" to="/Utilisateur">
-              <i className="fa fa-user"></i>
+              <i className="fa fa-users"></i>
               Utilisateur
             </Link>
           </li>
           <li>
             <Link className="link" to="/Chauffeur">
-              <i className="fa fa-id-badge"></i>
+              <i className="fa fa-id-card-alt"></i>
               Chauffeur
             </Link>
           </li>
           <li>
             <Link className="link" to="/Voitures">
-              <i className="fa fa-car"></i>
+              <i className="fa fa-car-side"></i>
               Voitures
             </Link>
           </li>
           <li>
             <Link className="link" to="/Employe">
-              <i className="fa fa-briefcase"></i>
+              <i className="fa fa-user-tie"></i>
               Employe
             </Link>
           </li>
           <li>
             <Link className="link" to="/Poste">
-              <i className="fa fa-briefcase"></i>
+              <i className="fa fa-building"></i>
               Poste
             </Link>
           </li>
           <li>
             <Link className="link" to="/Trajet">
-              <i className="fa fa-location-arrow"></i>
+              <i className="fa fa-route"></i>
               Trajet
             </Link>
           </li>
           <li>
             <Link className="link" to="/Voyage">
-              <i className="fa fa-location-arrow"></i>
+              <i className="fa fa-car-alt"></i>
               Voyage
             </Link>
           </li>
           <li>
-            <Link className="link" to="/Voyage">
-              <i className="fa fa-location-arrow"></i>
-              Paiement
+            <Link className="link" to="/PaiementEspece">
+              <i className="fa fa-money-bill-wave"></i>
+              Paiement Espèce
             </Link>
           </li>
           <li>
-            <Link className="link" to="/Voyage">
-              <i className="fa fa-location-arrow"></i>
-              Paiement
+            <Link className="link" to="/PaiementCarte">
+              <i className="fa fa-credit-card"></i>
+              Paiement Carte
             </Link>
           </li>
         </ul>

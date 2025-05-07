@@ -3,14 +3,45 @@ import { Link, useLocation } from "react-router-dom";
 import "../css/voiture_dispo.css";
 import "font-awesome/css/font-awesome.min.css";
 
-function Voiture_dispo({ setShowPayment, setReservationData, maxPlaces }) {
+function Voiture_dispo({
+  setShowPayment,
+  setReservationData,
+  maxPlaces,
+  occupiedPlaces = [],
+  trajet,
+  totalPlaces,
+}) {
   const [selectedPlaces, setSelectedPlaces] = useState([]);
-  const prixUnitaire = 20000;
-  const prixTotal = selectedPlaces.length * prixUnitaire;
-  const [occupiedPlaces] = useState(["3", "5", "8", "11", "14"]);
+  const prixTotal = selectedPlaces.length * trajet.prixUnitaire;
+  const placeLibre = totalPlaces - occupiedPlaces.length;
 
   const handleValidation = () => {
     if (prixTotal > 0) {
+      const reservationComplete = {
+        trajet: {
+          depart: trajet.depart,
+          arrivee: trajet.arrivee,
+          heureDepart: trajet.heureDepart,
+          prixUnitaire: trajet.prixUnitaire,
+        },
+        places: {
+          selectionnees: selectedPlaces,
+          occupees: occupiedPlaces,
+          libres: placeLibre,
+          total: totalPlaces,
+        },
+        prix: {
+          unitaire: trajet.prixUnitaire,
+          total: prixTotal,
+        },
+        restrictions: {
+          maxPlaces: maxPlaces,
+        },
+      };
+
+      console.log("DONNÉES DE RÉSERVATION:", reservationComplete);
+
+      
       setReservationData({
         placesCount: selectedPlaces.length,
         totalPrice: prixTotal,
@@ -45,136 +76,6 @@ function Voiture_dispo({ setShowPayment, setReservationData, maxPlaces }) {
 
   return (
     <div className="voiture_dispo">
-      {/* <div className="place" onClick={handlePlaceClick}>
-        <div className="range">
-          <div className="place_d" id="chauffeur">
-            <i className="fa fa-user"></i>
-          </div>
-          <div className="place_d" id="non"></div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("1") ? "selected" : ""
-            }`}
-          >
-            1
-          </div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("2") ? "selected" : ""
-            }`}
-          >
-            2
-          </div>
-        </div>
-        <div className="range">
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("3") ? "selected" : ""
-            }`}
-          >
-            3
-          </div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("4") ? "selected" : ""
-            }`}
-          >
-            4
-          </div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("5") ? "selected" : ""
-            }`}
-          >
-            5
-          </div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("6") ? "selected" : ""
-            }`}
-          >
-            6
-          </div>
-        </div>
-        <div className="range">
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("7") ? "selected" : ""
-            }`}
-          >
-            7
-          </div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("8") ? "selected" : ""
-            }`}
-          >
-            8
-          </div>
-          <div className="place_d" id="non"></div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("9") ? "selected" : ""
-            }`}
-          >
-            9
-          </div>
-        </div>
-        <div className="range">
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("10") ? "selected" : ""
-            }`}
-          >
-            10
-          </div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("11") ? "selected" : ""
-            }`}
-          >
-            11
-          </div>
-          <div className="place_d" id="non"></div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("12") ? "selected" : ""
-            }`}
-          >
-            12
-          </div>
-        </div>
-        <div className="range">
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("13") ? "selected" : ""
-            }`}
-          >
-            13
-          </div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("14") ? "selected" : ""
-            }`}
-          >
-            14
-          </div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("15") ? "selected" : ""
-            }`}
-          >
-            15
-          </div>
-          <div
-            className={`place_d ${
-              selectedPlaces.includes("16") ? "selected" : ""
-            }`}
-          >
-            16
-          </div>
-        </div>
-      </div> */}
       <div className="place" onClick={handlePlaceClick}>
         {/* Range 1 */}
         <div className="range">
@@ -220,19 +121,19 @@ function Voiture_dispo({ setShowPayment, setReservationData, maxPlaces }) {
       </div>
       <div className="trajet">
         <div className="traj_1">
-          <h3>Antananarivo</h3>
+          <h3>{trajet.depart}</h3>
           <i class="fa fa-arrow-right"></i>
-          <h3>Fianarantsoa</h3>
+          <h3>{trajet.arrivee}</h3>
         </div>
         <div id="donn" className="donn1">
-          <p>Départ :&nbsp;</p> <span>19:00</span>
+          <p>Départ :&nbsp;</p> <span>{trajet.heureDepart}</span>
         </div>
         <div id="donn" className="donn2">
-          <p>Prix :&nbsp;</p> <span>{prixUnitaire.toLocaleString()}&nbsp;</span>
+          <p>Prix :&nbsp;</p> <span>{trajet.prixUnitaire}&nbsp;</span>
           <span>Ar</span>
         </div>
         <div id="donn" className="donn3">
-          <p>Place libre :&nbsp;</p> <span>12</span>
+          <p>Place libre :&nbsp;</p> <span>{placeLibre}</span>
         </div>
         <div id="donn" className="donn4">
           <p>A payer :&nbsp;</p> <span>{prixTotal.toLocaleString()}&nbsp;</span>

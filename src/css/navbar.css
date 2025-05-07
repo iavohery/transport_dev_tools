@@ -1,4 +1,12 @@
 /* App.css */
+:root {
+  --bg-color: white;
+  --text-color: black;
+}
+.dark-mode {
+  --bg-color: #333;
+  --text-color: white;
+}
 .navbar3 {
   position: fixed;
   z-index: 100;
