@@ -7,9 +7,23 @@ import {
   GetEmployee,
   UpdateEmployee,
 } from "../assets/servicRoute/employee.service";
+import {
+  AjouterPoste,
+  DeletePoste,
+  GetPoste,
+  UpdatePoste,
+} from "../assets/servicRoute/poste.service";
+import {
+  AjouterUtilisateur,
+  DeleteUtilisateur,
+  GetUtilisateur,
+  UpdateUtilisateur,
+} from "../assets/servicRoute/user.service";
 
 function Employee() {
   const [Employee, setEmployee] = useState([]);
+  const [User, setUser] = useState([]);
+  const [Poste, setPoste] = useState([]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -31,8 +45,45 @@ function Employee() {
         console.error("Erreur lors de la récupération des employees :", error);
       }
     };
+    const fetchPoste = async () => {
+      try{
+        const reponsePoste = await GetPoste();
+        const dataPoste = reponsePoste.data.data;
+
+        const formattedPoste = dataPoste.map((p) => ({
+          id: p.idposte,
+          nom_poste: p.nom_poste,
+        }));
+        console.log(formattedPoste);
+
+        setPoste(formattedPoste);
+      }catch(error){
+        console.error("Erreur lors de la récupération des postes :", error);
+      }
+    };
+    const fetchUser = async () => {
+      try{
+        const reponseUser = await GetUtilisateur();
+        const dataUser = reponseUser.data.data;
+
+        const formattedUser = dataUser.map((u) => ({
+          id: u.iduser,
+          // numcin: u.numcin,
+          nom: u.nom,
+          // numtel: u.numtel,
+          // mot_passe: u.mot_passe,
+        }));
+        console.log(formattedUser);
+
+        setUser(formattedUser);
+      }catch(error){
+        console.error("Erreur lors de la récupération des users :", error);
+      }
+    }
 
     fetchEmployees();
+    fetchPoste();
+    fetchUser();
   }, []);
 
   return (
@@ -48,6 +99,8 @@ function Employee() {
           { key: "idposte", label: "Poste" },
         ]}
         data={Employee}
+        dataID1={User}
+        dataID2={Poste}
         onDataChange={async (id, newData) => {
           try {
             if (newData === null) {

@@ -7,9 +7,16 @@ import {
   GetDepense,
   UpdateDepense,
 } from "../assets/servicRoute/depense.service";
+import {
+  GetVoiture,
+  UpdateVoiture,
+  DeleteVoiture,
+  AjouterVoiture,
+} from "../assets/servicRoute/voiture.service";
 
 function Depense() {
   const [Depense, setDepense] = useState([]);
+  const [voitures, setVoitures] = useState([]);
 
   useEffect(() => {
     const fetchDepenses = async () => {
@@ -32,7 +39,26 @@ function Depense() {
       }
     };
 
+    const fetchVoitures = async () => {
+      try {
+        const responseVoiture = await GetVoiture();
+        const dataVoiture = responseVoiture.data.data;
+
+        const formattedVoiture = dataVoiture.map((vo) => ({
+          id: vo.idvoiture,
+          matricule: vo.numero_matricule,
+        }));
+        console.log(formattedVoiture);
+
+        setVoitures(formattedVoiture);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des voitures :", error);
+      }
+    };
+
+
     fetchDepenses();
+    fetchVoitures();
   }, []);
 
   return (
@@ -45,9 +71,10 @@ function Depense() {
           { key: "type", label: "Type" },
           { key: "date", label: "Date" },
           { key: "montant", label: "Montant depenser" },
-          { key: "idvoiture", label: "Id du voiture" },
+          { key: "idvoiture", label: "Matricule voiture" },
         ]}
         data={Depense}
+        dataID1={voitures}
         onDataChange={async (id, newData) => {
           try {
             if (newData === null) {
