@@ -8,7 +8,9 @@ function Deconnecter({ setShowDeco }) {
       <div className="cont1">
         <h2>Voulez vous vous déconnecter ?</h2>
         <div className="button">
-          <button>OUI</button>
+          <Link to="/Admin">
+            <button>OUI</button>
+          </Link>
           <button onClick={() => setShowDeco(false)} id="non2">
             NON
           </button>

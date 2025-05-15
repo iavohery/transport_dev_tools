@@ -2,6 +2,8 @@ import Api from "../axios/axios";
 
 const GetUtilisateur = () => Api.get("api/getAllUser/");
 
+const GetIdByPassWord = (data) => Api.post("api/getIdByPassWord/", data);
+
 const UpdateUtilisateur = (id, data) =>
   Api.put(`api/updateUtilisateur/${id}`, data);
 
@@ -14,4 +16,5 @@ export {
   UpdateUtilisateur,
   DeleteUtilisateur,
   AjouterUtilisateur,
+  GetIdByPassWord,
 };

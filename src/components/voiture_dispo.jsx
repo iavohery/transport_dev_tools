@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/voiture_dispo.css";
 import "font-awesome/css/font-awesome.min.css";
@@ -10,13 +10,116 @@ function Voiture_dispo({
   occupiedPlaces = [],
   trajet,
   totalPlaces,
+  data,
+  onSelectionChange,
 }) {
   const [selectedPlaces, setSelectedPlaces] = useState([]);
-  const prixTotal = selectedPlaces.length * trajet.prixUnitaire;
+  const [selectedPlacesData, setSelectedPlacesData] = useState([]);
+  const prixTotal = selectedPlacesData.reduce(
+    (sum, place) => sum + place.prixUnitaire,
+    0
+  );
   const placeLibre = totalPlaces - occupiedPlaces.length;
 
+  const handlePlaceClick = (e) => {
+    const placeDiv = e.target.closest(".place_d");
+    if (!placeDiv || placeDiv.id === "non" || placeDiv.id === "chauffeur")
+      return;
+
+    const placeNumber = placeDiv.textContent.trim();
+    if (!placeNumber || occupiedPlaces.includes(placeNumber)) return;
+
+    if (!data || !data.Places) {
+      console.error("Données de la voiture non disponibles");
+      return;
+    }
+
+    const placeObj = data.Places.find(
+      (p) => String(p.numplace).trim() === placeNumber
+    );
+
+    if (!placeObj) {
+      console.warn(`Place ${placeNumber} non trouvée`);
+      return;
+    }
+
+    setSelectedPlacesData((prev) => {
+      // Vérifie si la même place est déjà réservée pour la MÊME date et heure
+      const existingReservationIndex = prev.findIndex(
+        (item) =>
+          item.numeroPlace === placeNumber &&
+          item.date === trajet.date &&
+          item.heureDepart === trajet.heureDepart
+      );
+
+      const newReservation = {
+        numeroPlace: placeNumber,
+        idPlace: placeObj.idplace,
+        idVoiture: data.idvoiture,
+        matricule: data.numero_matricule,
+        date: trajet.date,
+        heureDepart: trajet.heureDepart,
+        prixUnitaire: trajet.prixUnitaire,
+        pointDepart: trajet.depart,
+        pointAriver: trajet.arrivee,
+      };
+
+      let newSelections;
+
+      if (existingReservationIndex >= 0) {
+        // Supprime seulement la réservation pour ce créneau exact
+        newSelections = prev.filter(
+          (_, index) => index !== existingReservationIndex
+        );
+        console.log("Réservation annulée pour", {
+          date: trajet.date,
+          heure: trajet.heureDepart,
+          place: placeNumber,
+        });
+      } else if (prev.length >= maxPlaces) {
+        console.warn("Limite maximale de places atteinte", {
+          limit: maxPlaces,
+          attemptedReservation: newReservation,
+        });
+        return prev;
+      } else {
+        // Ajoute la nouvelle réservation
+        newSelections = [...prev, newReservation];
+        console.log("Nouvelle réservation ajoutée", {
+          reservation: newReservation,
+          totalReservations: newSelections.length,
+          reservationsParHeure: groupByHour(newSelections),
+        });
+      }
+
+      if (onSelectionChange) onSelectionChange(newSelections);
+      return newSelections;
+    });
+
+    // Mise à jour visuelle
+    setSelectedPlaces((prev) => {
+      if (prev.includes(placeNumber)) {
+        // On désélectionne
+        return prev.filter((p) => p !== placeNumber);
+      } else {
+        // On ajoute si on n’a pas dépassé la limite
+        if (prev.length >= maxPlaces) return prev;
+        return [...prev, placeNumber];
+      }
+    });
+  };
+
+  // Helper function
+  const groupByHour = (reservations) => {
+    return reservations.reduce((acc, curr) => {
+      const key = `${curr.date} ${curr.heureDepart}`;
+      (acc[key] = acc[key] || []).push(curr.numeroPlace);
+      return acc;
+    }, {});
+  };
+
   const handleValidation = () => {
-    if (prixTotal > 0) {
+    if (selectedPlacesData.length > 0) {
       const reservationComplete = {
         trajet: {
           depart: trajet.depart,
@@ -24,48 +127,23 @@ function Voiture_dispo({
           heureDepart: trajet.heureDepart,
           prixUnitaire: trajet.prixUnitaire,
         },
-        places: {
-          selectionnees: selectedPlaces,
-          occupees: occupiedPlaces,
-          libres: placeLibre,
-          total: totalPlaces,
-        },
-        prix: {
-          unitaire: trajet.prixUnitaire,
-          total: prixTotal,
-        },
+        selection: selectedPlacesData,
+        prixTotal: prixTotal,
         restrictions: {
           maxPlaces: maxPlaces,
         },
       };
 
-      console.log("DONNÉES DE RÉSERVATION:", reservationComplete);
+      console.log("DONNÉES COMPLÈTES PAIEMENT:", reservationComplete);
 
-      
       setReservationData({
-        placesCount: selectedPlaces.length,
+        placesCount: selectedPlacesData.length,
         totalPrice: prixTotal,
+        details: selectedPlacesData,
       });
+
       setShowPayment(true);
     }
-  };
-
-  const handlePlaceClick = (e) => {
-    const placeDiv = e.target.closest(".place_d");
-    if (!placeDiv || placeDiv.id === "non" || placeDiv.id === "chauffeur")
-      return;
-
-    const placeNumber = placeDiv.textContent;
-    if (!placeNumber || occupiedPlaces.includes(placeNumber)) return;
-
-    setSelectedPlaces((prev) => {
-      if (prev.includes(placeNumber)) {
-        return prev.filter((p) => p !== placeNumber);
-      } else if (prev.length < maxPlaces) {
-        return [...prev, placeNumber];
-      }
-      return prev;
-    });
   };
 
   const getPlaceClass = (placeNumber) => {
@@ -87,7 +165,6 @@ function Voiture_dispo({
           <div className={`place_d ${getPlaceClass("2")}`}>2</div>
         </div>
 
-        {/* Range 2 */}
         <div className="range">
           <div className={`place_d ${getPlaceClass("3")}`}>3</div>
           <div className={`place_d ${getPlaceClass("4")}`}>4</div>
@@ -119,10 +196,11 @@ function Voiture_dispo({
           <div className={`place_d ${getPlaceClass("16")}`}>16</div>
         </div>
       </div>
+
       <div className="trajet">
         <div className="traj_1">
           <h3>{trajet.depart}</h3>
-          <i class="fa fa-arrow-right"></i>
+          <i className="fa fa-arrow-right"></i>
           <h3>{trajet.arrivee}</h3>
         </div>
         <div id="donn" className="donn1">
@@ -147,24 +225,12 @@ function Voiture_dispo({
           style={{
             opacity: prixTotal === 0 ? 0.3 : 1,
             cursor: prixTotal === 0 ? "not-allowed" : "pointer",
-            backgroundColor: prixTotal === 0 ? "transparent" : "",
-            color: prixTotal === 0 ? "white" : "",
-            border: prixTotal === 0 ? "1px solid white" : "",
           }}
           title={
             prixTotal === 0 ? "Veuillez sélectionner au moins une place" : ""
           }
         >
-          <p
-            style={{
-              opacity: prixTotal === 0 ? 0.6 : 1,
-              cursor: prixTotal === 0 ? "not-allowed" : "pointer",
-              backgroundColor: prixTotal === 0 ? "transparent" : "",
-              color: prixTotal === 0 ? "white" : "",
-            }}
-          >
-            Valider
-          </p>
+          <p>Valider</p>
           <i className="fa fa-shopping-cart"></i>
         </button>
       </div>

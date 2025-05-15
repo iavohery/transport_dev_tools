@@ -4,26 +4,30 @@ import ReserverComp from "../components/reserverComp";
 import Payement from "../components/payement";
 import Mail from "../components/mail";
 
-
 function Reserver() {
   const [showPayment, setShowPayment] = useState(false);
-     const [reservationData, setReservationData] = useState({
-       placesCount: 0,
-       totalPrice: 0,
-     });
-
+  const [reservationData, setReservationData] = useState({
+    placesCount: 0,
+    totalPrice: 0,
+  });
+  const [globalSelections, setGlobalSelections] = useState([]);
+  const [refreshFn, setRefreshFn] = useState(() => () => {});
   return (
     <div>
       <NavBar />
       <ReserverComp
         setShowPayment={setShowPayment}
         setReservationData={setReservationData}
+        setGlobalSelections={setGlobalSelections}
+        setRefreshFn={setRefreshFn}
       />
       {showPayment && (
         <Payement
           setShowPayment={setShowPayment}
           placesCount={reservationData.placesCount}
           totalPrice={reservationData.totalPrice}
+          globalSelections={globalSelections}
+          refreshVoitures={refreshFn}
         />
       )}
 

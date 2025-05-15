@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/payement.css";
 import "font-awesome/css/font-awesome.min.css";
+import { AjouterReservation } from "../assets/servicRoute/reservation.service";
 
-function Payement({ setShowPayment, placesCount, totalPrice }) {
+function Payement({
+  setShowPayment,
+  placesCount,
+  totalPrice,
+  globalSelections,
+  refreshVoitures,
+}) {
   const [activePayment, setActivePayment] = useState(null);
   const [isValidated, setIsValidated] = useState(false);
   const [formData, setFormData] = useState({
@@ -12,6 +19,15 @@ function Payement({ setShowPayment, placesCount, totalPrice }) {
     cin: "",
     numero: "",
   });
+
+  console.log(
+    "Payement component rendu avec globalSelections:",
+    globalSelections
+  );
+
+  // useEffect(() => {
+  //   console.log("Sélections globales mises à jour:", globalSelections);
+  // }, [globalSelections]);
 
   const handlePaymentClick = (paymentMethod) => {
     setActivePayment(paymentMethod);
@@ -27,8 +43,21 @@ function Payement({ setShowPayment, placesCount, totalPrice }) {
   };
 
   const handleValidation = () => {
+    const payload = {
+      client: formData,
+      selections: globalSelections,
+      pointDepart: globalSelections[0]?.pointDepart || "",
+      pointArriver: globalSelections[0]?.pointAriver || "",
+      date: globalSelections[0]?.date || "",
+      heureDepart: globalSelections[0]?.heureDepart || "",
+      total: totalPrice,
+      paiement: activePayment,
+    };
+    console.log("ty le donnee farany", payload);
     if (isFormValid()) {
       setIsValidated(true);
+      PostReservation(payload);
+      refreshVoitures();
       setTimeout(() => {
         setShowPayment(false);
         setIsValidated(false);
@@ -40,6 +69,14 @@ function Payement({ setShowPayment, placesCount, totalPrice }) {
           numero: "",
         });
       }, 1000);
+    }
+  };
+
+  const PostReservation = async (data) => {
+    try {
+      await AjouterReservation(data);
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la reservation :", error);
     }
   };
 
@@ -167,19 +204,18 @@ function Payement({ setShowPayment, placesCount, totalPrice }) {
                       onChange={handleInputChange}
                     />
                   </div>
-            <div className="btn_validation_payement">
-                  <button
-                    className={`btn-valider-paiement ${
-                      !isFormValid() ? "disabled" : ""
-                    } ${isValidated ? "validated" : ""}`}
-                    disabled={!isFormValid()}
-                    onClick={handleValidation}
-                  >
-                    <span>Valider le paiement</span>
-                    <i className="fa fa-check-circle"></i>
-                  </button>
-
-            </div>
+                  <div className="btn_validation_payement">
+                    <button
+                      className={`btn-valider-paiement ${
+                        !isFormValid() ? "disabled" : ""
+                      } ${isValidated ? "validated" : ""}`}
+                      disabled={!isFormValid()}
+                      onClick={handleValidation}
+                    >
+                      <span>Valider le paiement</span>
+                      <i className="fa fa-check-circle"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

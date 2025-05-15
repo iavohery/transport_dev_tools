@@ -1,36 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../css/reserverComp.css";
 import { Link, useLocation } from "react-router-dom";
 import fontLog from "../assets/fontLog.jpg";
 import Voiture_dispo from "./voiture_dispo";
+import { GetPlaceOccuper } from "../assets/servicRoute/placeOccuper.service";
 
-function ReserverComp({ setShowPayment, setReservationData }) {
+function ReserverComp({
+  setShowPayment,
+  setReservationData,
+  setGlobalSelections,
+  setRefreshFn,
+}) {
   const [departure, setDeparture] = useState("");
   const [arrival, setArrival] = useState("");
   const [reservationDate, setReservationDate] = useState("");
   const [travelers, setTravelers] = useState(1);
-  const [timeOfDay, setTimeOfDay] = useState("morning");
+  const [timeOfDay, setTimeOfDay] = useState();
   const [prixTotal, setPrixTotal] = useState(0);
   const [hasSearched, setHasSearched] = useState(false);
   const [voituresDisponibles, setVoituresDisponibles] = useState([]);
-  const occupiedPlaces = ["3", "5", "8", "11", "14"];
-  const prix = 20000;
+  const [globalSelections, setGlobalSelection] = useState([]);
+
+  const fetchVoituresDisponibles = async () => {
+    try {
+      const response = await GetPlaceOccuper({
+        point_depart: departure,
+        destination: arrival,
+        date: reservationDate,
+        heure_depart: timeOfDay,
+      });
+      const result = response.data.data;
+
+      const filtres = result.filter((voiture) => {
+        return voiture.Voyages.some((v) => {
+          return (
+            v.date === reservationDate &&
+            v.heure_depart === timeOfDay &&
+            v.Trajet.point_depart.toLowerCase() === departure.toLowerCase() &&
+            v.Trajet.destination.toLowerCase() === arrival.toLowerCase()
+          );
+        });
+      });
+
+      setVoituresDisponibles(filtres);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des voitures:", error);
+      setVoituresDisponibles([]);
+    }
+  };
+
+  useEffect(() => {
+    setRefreshFn(() => fetchVoituresDisponibles);
+  }, [departure, arrival, reservationDate, timeOfDay]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // setSearchPerformed(true);
-
+    if (!isFormValid()) return;
     setHasSearched(true);
-    const resultats = fetchVoituresDisponibles();
-    setVoituresDisponibles(resultats);
-
-    console.log({
-      departure,
-      arrival,
-      reservationDate,
-      travelers,
-      timeOfDay,
-    });
+    fetchVoituresDisponibles();
   };
 
   const isFormValid = () => {
@@ -59,11 +86,46 @@ function ReserverComp({ setShowPayment, setReservationData }) {
     }
   };
 
+  const handleVoitureSelection = (voitureId, newSelection) => {
+    setGlobalSelection((prev) => {
+      // 1. Filtrer pour garder seulement les réservations des autres voitures
+      const otherReservations = prev.filter(
+        (item) => item.idVoiture !== voitureId
+      );
+
+      // 2. Vérifier si cette place existe déjà pour cette voiture (même date/heure)
+      const existingIndex = prev.findIndex(
+        (item) =>
+          item.idVoiture === voitureId &&
+          item.numeroPlace === newSelection.numeroPlace &&
+          item.voyageDate === newSelection.voyageDate &&
+          item.heureDepart === newSelection.heureDepart
+      );
+
+      // 3. Gérer l'ajout/suppression
+      if (existingIndex >= 0) {
+        // Supprimer seulement cette réservation spécifique
+        return [
+          ...prev.slice(0, existingIndex),
+          ...prev.slice(existingIndex + 1),
+        ];
+      } else {
+        // Ajouter la nouvelle réservation
+        return [...otherReservations, newSelection];
+      }
+    });
+    setGlobalSelections(newSelection);
+  };
+
+  // useEffect(() => {
+  //   console.log("ty le globale ty", globalSelections);
+  //   setGlobalSelections(globalSelections);
+  // }, [globalSelections]);
+
   return (
     <div className="centrereserver">
       <div className="centrereserver_1">
         <h2>Choisissez votre itinéraire</h2>
-        {/* <p id="centrereserver_1_p">(Veuillez renseigner les informations nécessaires)</p> */}
         <form>
           <div className="form-group1">
             <label htmlFor="departure">Départ:</label>
@@ -103,6 +165,12 @@ function ReserverComp({ setShowPayment, setReservationData }) {
               type="date"
               id="reservationDate"
               value={reservationDate}
+              min={new Date().toISOString().split("T")[0]}
+              max={
+                new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                  .toISOString()
+                  .split("T")[0]
+              }
               onChange={(e) => setReservationDate(e.target.value)}
             />
           </div>
@@ -122,43 +190,31 @@ function ReserverComp({ setShowPayment, setReservationData }) {
                 type="button"
                 className="travelers-btn"
                 onClick={() => handleTravelerChange("increment")}
-              ></button>
+              >
+                +
+              </button>
             </div>
           </div>
 
           <div className="form-group1">
             <label>Heure de départ:</label>
             <div className="time-options">
-              <label>
-                <input
-                  type="radio"
-                  name="timeOfDay"
-                  value="07:00"
-                  checked={timeOfDay === "07:00"}
-                  onChange={() => setTimeOfDay("07:00")}
-                />
-                Matin (07h)
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="timeOfDay"
-                  value="12:00"
-                  checked={timeOfDay === "12:00"}
-                  onChange={() => setTimeOfDay("12:00")}
-                />
-                Midi (12h)
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="timeOfDay"
-                  value="19:00"
-                  checked={timeOfDay === "19:00"}
-                  onChange={() => setTimeOfDay("19:00")}
-                />
-                Soir (19h)
-              </label>
+              {["07:00", "12:00", "19:00"].map((time) => (
+                <label key={time}>
+                  <input
+                    type="radio"
+                    name="timeOfDay"
+                    value={time}
+                    checked={timeOfDay === time}
+                    onChange={() => setTimeOfDay(time)}
+                  />
+                  {time === "07:00"
+                    ? "Matin (07h)"
+                    : time === "12:00"
+                    ? "Midi (12h)"
+                    : "Soir (19h)"}
+                </label>
+              ))}
             </div>
           </div>
 
@@ -173,6 +229,7 @@ function ReserverComp({ setShowPayment, setReservationData }) {
           </button>
         </form>
       </div>
+
       <div className="centrereserver_2">
         <div className="cover">
           <div className="cov1">
@@ -181,7 +238,7 @@ function ReserverComp({ setShowPayment, setReservationData }) {
           </div>
           <div className="cov2">
             <div className="cube"></div>
-            <p>Place occupé</p>
+            <p>Place occupée</p>
           </div>
           <div className="cov3">
             <div className="cube"></div>
@@ -194,32 +251,7 @@ function ReserverComp({ setShowPayment, setReservationData }) {
             <p>Chauffeur</p>
           </div>
         </div>
-        {hasSearched && voituresDisponibles.length === 0 && (
-          <div className="no-results-message">
-            <i className="fa fa-exclamation-circle"></i>
-            <p>Aucun trajet trouvé pour vos critères</p>
-            <p className="search-tip">
-              Essayez d'élargir vos dates ou de vérifier les noms des villes
-            </p>
-          </div>
-        )}
 
-        {/* <div className="pre-search-message">
-          <div className="search-icon-container">
-            <i className="fa fa-search fa-3x"></i>
-          </div>
-          <h3>Recherchez votre trajet idéal</h3>
-          <p>
-            Veuillez sélectionner vos critères de voyage (ville de départ,
-            destination, date, nombre de voyageur et heure) puis cliquez sur "Rechercher"
-          </p>
-          <div className="tips">
-            <p>
-              <i className="fa fa-lightbulb"></i> Conseil : Essayez d'élargir
-              vos dates pour plus d'options
-            </p>
-          </div>
-        </div> */}
         {!hasSearched && (
           <div className="pre-search-message">
             <div className="search-icon-container">
@@ -228,7 +260,7 @@ function ReserverComp({ setShowPayment, setReservationData }) {
             <h3>Recherchez votre trajet idéal</h3>
             <p>
               Veuillez sélectionner vos critères de voyage (ville de départ,
-              destination, date, nombre de voyageur et heure) puis cliquez sur
+              destination, date, nombre de voyageurs et heure) puis cliquez sur
               "Rechercher"
             </p>
             <div className="tips">
@@ -240,28 +272,59 @@ function ReserverComp({ setShowPayment, setReservationData }) {
           </div>
         )}
 
-        {hasSearched && voituresDisponibles.length > 0 && (
-          <>
-            {/* {voituresDisponibles.map((voiture) => ( */}
-            <Voiture_dispo
-              // key={voiture.id}
-              setShowPayment={setShowPayment}
-              setReservationData={setReservationData}
-              maxPlaces={travelers}
-              occupiedPlaces={occupiedPlaces}
-              totalPlaces={16}
-              trajet={{
-                depart: departure,
-                arrivee: arrival,
-                heureDepart: timeOfDay,
-                prixUnitaire: prix,
-              }}
-
-              // data={voiture}
-            />
-            {/* ))} */}
-          </>
+        {hasSearched && voituresDisponibles.length === 0 && (
+          <div className="no-results-message">
+            <i className="fa fa-exclamation-circle"></i>
+            <p>Aucun trajet trouvé pour vos critères</p>
+          </div>
         )}
+
+        {hasSearched &&
+          voituresDisponibles.map((voiture) => {
+            const matchedVoyage = voiture.Voyages.find(
+              (v) =>
+                v.date === reservationDate &&
+                v.heure_depart === timeOfDay &&
+                v.Trajet.point_depart.toLowerCase() ===
+                  departure.toLowerCase() &&
+                v.Trajet.destination.toLowerCase() === arrival.toLowerCase()
+            );
+
+            if (!matchedVoyage) return null;
+
+            return (
+              <Voiture_dispo
+                key={voiture.idvoiture}
+                setShowPayment={setShowPayment}
+                setReservationData={setReservationData}
+                maxPlaces={travelers}
+                occupiedPlaces={voiture.Places.filter(
+                  (p) => Array.isArray(p.Reservers) && p.Reservers.length > 0
+                ).map((p) => String(p.numplace))}
+                totalPlaces={voiture.capacite}
+                trajet={{
+                  depart: matchedVoyage.Trajet.point_depart,
+                  arrivee: matchedVoyage.Trajet.destination,
+                  heureDepart: matchedVoyage.heure_depart,
+                  prixUnitaire: matchedVoyage.Trajet.tarif,
+                  date: matchedVoyage.date,
+                }}
+                data={voiture}
+                currentSelections={globalSelections.filter(
+                  (sel) => sel.idVoiture === voiture.idvoiture
+                )}
+                onSelectionChange={(selection) => {
+                  handleVoitureSelection(voiture.idvoiture, {
+                    ...selection,
+                    idVoiture: voiture.idvoiture,
+                    matricule: voiture.numero_matricule,
+                    voyageDate: matchedVoyage.date,
+                    heureDepart: matchedVoyage.heure_depart,
+                  });
+                }}
+              />
+            );
+          })}
       </div>
     </div>
   );

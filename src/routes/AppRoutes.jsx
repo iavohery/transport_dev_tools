@@ -15,6 +15,7 @@ import Poste from "../pages/poste";
 import Voyage from "../pages/voyage";
 import Paiement from "../pages/paiement";
 import Depense from "../pages/Depense";
+import Adminlog from "../components/Adminlog";
 
 function AppRoutes() {
   return (
@@ -36,6 +37,7 @@ function AppRoutes() {
         <Route path="/Voyage" element={<Voyage />} />
         <Route path="/Paiement" element={<Paiement />} />
         <Route path="/Depense" element={<Depense />} />
+        <Route path="/Adminlog" element={<Depense />} />
       </Routes>
     </Router>
   );
