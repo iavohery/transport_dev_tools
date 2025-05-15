@@ -19,6 +19,7 @@ router.post("/createUtilisateur/", utilisateur.createUtilisateur);
 router.put("/updateUtilisateur/:id", utilisateur.updateUtilisateur);
 router.delete("/deleteUtilisateur/:id", utilisateur.deleteUtilisateur);
 router.get("/getAllUser/", utilisateur.getAllUtilisateurs);
+router.post("/getIdByPassWord/", utilisateur.getiDbyPassWord);
 //router.get("/rechercheUser/:id",utilisateur.getUtilisateurById);
 router.post("/createVoiture/", voiture.createVoiture);
 router.put("/updateVoiture/:id", voiture.updateVoiture);
@@ -45,7 +46,7 @@ router.put("/updatePlace/:id", place.updatePlace);
 router.delete("/deletePlace/:id", place.deletePlace);
 router.get("/getAllPlace/", place.getAllPlace);
 //router.get("/recherchePlace/:id",place.getPlaceById);
-router.get(
+router.post(
   "/getVoituresAvecPlacesOccupees/",
   place.getVoituresAvecPlacesOccupees
 );
@@ -75,6 +76,7 @@ router.delete("/deletePaiement/:id", paiement.deletePaiement);
 router.post("/createPaiement", paiement.createPaiment);
 // router.get("/recherchePaiment/:id",depense.getPaimentById);
 router.post("/createReservation/", reserver.createReservation);
+router.post("/postReservationPlace/", reserver.createRealeReservation);
 // router.put("/updateChauffeur/:id",chauffeur.updateChauffeur);
 // router.delete("/deleteChauffeur/:id",chauffeur.deleteChauffeur);
 router.get("/getAllReservation/", reserver.getAllReservation);

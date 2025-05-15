@@ -3,6 +3,7 @@ const Voiture = require("../Modele/voiture");
 const Voyage = require("../Modele/voyage");
 const Trajet = require("../Modele/trajet");
 const Reserver = require("../Modele/reserver");
+const { Sequelize } = require("sequelize");
 
 // CREATE
 exports.createPlace = async ({ numplace, idvoiture }) => {
@@ -120,37 +121,75 @@ exports.getAllPlace = async (req, res) => {
 // };
 
 // Voiture avec Place Occupes
+const { Op } = require("sequelize");
+
 exports.getVoituresAvecPlacesOccupees = async (req, res) => {
   try {
-    const { point_depart, destination, date } = req.body;
+    const { point_depart, destination } = req.body;
+
+    // Obtenir la date et heure actuelles
+    const now = new Date();
+
+    // Récupérer tous les voyages à venir
+    const voyages = await Voyage.findAll({
+      where: {
+        [Op.and]: [
+          // Crée une condition pour exclure les dates/heure passées
+          Sequelize.where(
+            Sequelize.fn(
+              "STR_TO_DATE",
+              Sequelize.fn(
+                "CONCAT",
+                Sequelize.col("date"),
+                " ",
+                Sequelize.col("heure_depart")
+              ),
+              "%Y-%m-%d %H:%i:%s"
+            ),
+            {
+              [Op.gte]: now,
+            }
+          ),
+        ],
+      },
+      include: [
+        {
+          model: Trajet,
+          required: true,
+          where: { point_depart, destination },
+        },
+      ],
+    });
+
+    if (!voyages || voyages.length === 0) {
+      return res.status(404).json({ message: "Aucun voyage à venir trouvé." });
+    }
+
+    const voyageIds = voyages.map((v) => v.idvoyage);
 
     const voitures = await Voiture.findAll({
       include: [
         {
           model: Voyage,
           required: true,
-          where: { date: date },
+          where: {
+            idvoyage: voyageIds,
+          },
           include: [
             {
               model: Trajet,
               required: true,
-              where: {
-                point_depart: point_depart,
-                destination: destination,
-              },
+              where: { point_depart, destination },
             },
           ],
         },
         {
           model: Place,
-          required: true,
           include: [
             {
               model: Reserver,
-              required: true, // ✅ Place doit être réservée
-              where: {
-                date: date,
-              },
+              required: false,
+              where: { idvoyage: voyageIds },
             },
           ],
         },

@@ -24,6 +24,29 @@ exports.createPaiment = async (req, res) => {
   }
 };
 
+//CREATE
+exports.createRealePaiement = async (montant_total, mode_paiment) => {
+  try {
+    const today = new Date();
+    const dateAujourdhui = today.toISOString().split("T")[0];
+
+    const paiement = await Paiement.create({
+      montant_total,
+      mode_paiment,
+      statut: "payer",
+      date: dateAujourdhui,
+    });
+
+    if (!paiement) {
+      console.log("Echec de paiement", erreur);
+    }
+
+    return paiement;
+  } catch (erreur) {
+    console.log("Une erreur c'est produit");
+  }
+};
+
 //UPDATE
 exports.updatePaiement = async (req, res) => {
   try {

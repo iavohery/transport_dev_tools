@@ -116,3 +116,37 @@ exports.getAllVoyage = async (req, res) => {
       .json({ message: "Erreur lors de la récupération des utilisateurs" });
   }
 };
+
+//GET ID VOYAGE BY TRAJET
+exports.getByNameTrajet = async (
+  pointDepart,
+  pointArriver,
+  heureDepart,
+  date
+) => {
+  try {
+    const voyage = await Voyage.findOne({
+      attributes: ["idvoyage"],
+      where: {
+        heure_depart: heureDepart,
+        date: date,
+      },
+      include: {
+        model: Trajet,
+        where: {
+          point_depart: pointDepart,
+          destination: pointArriver,
+        },
+      },
+    });
+
+    if (!voyage) {
+      console.log("Id du voyage non trouver");
+    }
+
+    return voyage; // juste retourner la donnée
+  } catch (error) {
+    console.error("Erreur lors de la recherche :", error);
+    throw error; // renvoyer l'erreur au contrôleur
+  }
+};

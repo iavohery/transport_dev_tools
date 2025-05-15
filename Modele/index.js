@@ -16,28 +16,42 @@ const Paiement_salaire = require("./paiment_salaire");
 
 Trajet.hasMany(Voyage, { foreignKey: "idtrajet" });
 Voyage.belongsTo(Trajet, { foreignKey: "idtrajet" });
+
 Voiture.hasMany(Voyage, { foreignKey: "idvoiture" });
 Voyage.belongsTo(Voiture, { foreignKey: "idvoiture" });
+
 Utilisateur.hasMany(Reserver, { foreignKey: "iduser" });
 Reserver.belongsTo(Utilisateur, { foreignKey: "iduser" });
+
 Place.hasMany(Reserver, { foreignKey: "idplace" });
 Reserver.belongsTo(Place, { foreignKey: "idplace" });
+
 Paiement.hasMany(Posseder, { foreignKey: "idpaiement" });
 Posseder.belongsTo(Paiement, { foreignKey: "idpaiement" });
+
 Colis.hasMany(Posseder, { foreignKey: "idcolis" });
 Posseder.belongsTo(Colis, { foreignKey: "idcolis" });
+
 Reserver.hasMany(Posseder, { foreignKey: "idreserver" });
 Posseder.belongsTo(Reserver, { foreignKey: "idreserver" });
+
 Utilisateur.hasOne(Employe, { foreignKey: "iduser" });
 Employe.belongsTo(Utilisateur, { foreignKey: "iduser" });
+
 Poste.hasMany(Employe, { foreignKey: "idposte" });
 Employe.belongsTo(Poste, { foreignKey: "idposte" });
+
 Voiture.hasMany(Depense, { foreignKey: "idvoiture" });
 Depense.belongsTo(Voiture, { foreignKey: "idvoiture" });
+
 Poids.hasMany(Colis, { foreignKey: "idpoids" });
 Colis.belongsTo(Poids, { foreignKey: "idpoids" });
+
 Utilisateur.hasMany(Colis, { foreignKey: "iduser" });
 Colis.belongsTo(Utilisateur, { foreignKey: "iduser" });
+
+Voyage.hasMany(Reserver, { foreignKey: "idvoyage" });
+Reserver.belongsTo(Voyage, { foreignKey: "idvoyage" });
 
 Voiture.hasMany(Place, { foreignKey: "idvoiture" });
 Place.belongsTo(Voiture, { foreignKey: "idvoiture" });
