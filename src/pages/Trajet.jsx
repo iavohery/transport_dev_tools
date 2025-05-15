@@ -12,7 +12,7 @@ function Trajet() {
   const [Trajet, setTrajet] = useState([]);
 
   useEffect(() => {
-    const fetchVoitures = async () => {
+    const fetchTrajet = async () => {
       try {
         const response = await GetTrajet();
         const data = response.data.data;
@@ -31,7 +31,7 @@ function Trajet() {
       }
     };
 
-    fetchVoitures();
+    fetchTrajet();
   }, []);
 
   return (

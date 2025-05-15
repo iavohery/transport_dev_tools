@@ -3,7 +3,7 @@ import "../css/crud.css";
 import AjoutCrud from "./ajoutCrud";
 import SupprimerCrud from "./supprimerCrud";
 
-function Crud({ titre, headers = [], data = [], onDataChange }) {
+function Crud({ titre, headers = [], data = [], onDataChange, dataID1=[], dataID2=[], dataID3=[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showAjoutCrud, setShowAjoutCrud] = useState(false);
@@ -13,6 +13,9 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
   const [displayData, setDisplayData] = useState([]);
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [selectedIdToDelete, setSelectedIdToDelete] = useState(null);
+  let idFieldCount = 0;
+  const idFieldRegex = /^(id(user|place|poste|paiement|voiture|poids|colis|employe|depense|trajet|voyage))$/i;
+
 
   const handleAddData = async (newItem) => {
     try {
@@ -161,24 +164,66 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
                   key={item.id}
                   className={highlightedRow === item.id ? "highlight-row" : ""}
                 >
-                  {headers.map(({ key }, index) => (
-                    <td key={`data-${item.id}-${index}`}>
-                      {editingRow === item.id ? (
-                        <input
-                          id="input_modifier"
-                          type="text"
-                          value={
-                            key in tempData ? tempData[key] : item[key] || ""
-                          }
-                          onChange={(e) =>
-                            handleInputChange(key, e.target.value)
-                          }
-                        />
-                      ) : (
-                        item[key]
-                      )}
-                    </td>
-                  ))}
+                  {headers.map(({ key }, index) => {
+                    const isIDField = idFieldRegex.test(key);
+        
+                    // Gestion des champs spéciaux ID avec SELECT
+                    if (isIDField && idFieldCount < 3) {
+                      let options = [];
+                      let i = 1;
+        
+                      if (idFieldCount === 0) options = dataID1;
+                      else if (idFieldCount === 1) options = dataID2;
+                      else if (idFieldCount === 2) options = dataID3;
+        
+                      idFieldCount++; // Incrémenter pour le prochain champ ID
+        
+                      return (
+                        <td key={`data-${item.id}-${index}`}>
+                          {editingRow === item.id ? (
+                          <select
+                            id="input__"
+                            name={key}
+                            value={tempData[key] || ""}
+                            onChange={(e) => handleInputChange(key, e.target.value)}
+                          >
+                            <option value="">Sélectionnez une option</option>
+                            {options.map((item, idx) => (
+                             <option key={`option-${item.id}`} value={item.id}>
+                             {Object.entries(item).slice(1).map(([, val]) => val).join(" - ")}
+                           </option>
+                            ))}
+                          </select>
+                          ):(
+                            (() => {
+                              const selected = options.find(opt => opt.id === item[key]);
+                              return selected
+                                ? Object.values(selected).slice(1).join(" - ")
+                                : item[key];
+                            })()
+                          )}
+                          </td>
+                      );
+                    }
+                      return(
+                        <td key={`data-${item.id}-${index}`}>
+                              {editingRow === item.id ? (
+                                <input
+                                  id="input_modifier"
+                                  type="text"
+                                  value={
+                                    key in tempData ? tempData[key] : item[key] || ""
+                                  }
+                                  onChange={(e) =>
+                                    handleInputChange(key, e.target.value)
+                                  }
+                                />
+                              ) : (
+                                item[key]
+                              )}
+                        </td>
+                      );
+                  })}
                   <td id="butt">
                     {editingRow === item.id ? (
                       <>
@@ -228,6 +273,9 @@ function Crud({ titre, headers = [], data = [], onDataChange }) {
           setShowAjoutCrud={setShowAjoutCrud}
           headers={headers}
           onAddData={handleAddData}
+          dataID11={dataID1}
+          dataID22={dataID2}
+          dataID33={dataID3}
         />
       )}
       {showSupCrud && (

@@ -7,9 +7,25 @@ import {
   UpdateVoyage,
   DeleteVoyage,
 } from "../assets/servicRoute/voyage.service";
+import {
+  GetTrajet,
+  UpdateTrajet,
+  DeleteTrajet,
+  AjouterTrajet,
+} from "../assets/servicRoute/trajet.service";
+import {
+  GetVoiture,
+  UpdateVoiture,
+  DeleteVoiture,
+  AjouterVoiture,
+} from "../assets/servicRoute/voiture.service";
+import { GetChauffeur } from "../assets/servicRoute/chauffeur.service";
 
 function Voyage() {
   const [Employee, setVoyage] = useState([]);
+  const [Trajet, setTrajet] = useState([]);
+  const [Voitures, setVoitures] = useState([]);
+  const [Chauffeur, setChauffeur] = useState([]);
 
   useEffect(() => {
     const fetchVoyage = async () => {
@@ -33,8 +49,62 @@ function Voyage() {
         console.error("Erreur lors de la récupération des voyage :", error);
       }
     };
+    const fetchTrajet = async () => {
+      try {
+        const response = await GetTrajet();
+        const data = response.data.data;
+
+        const formatted = data.map((v) => ({
+          id: v.idtrajet,
+          point_depart: v.point_depart,
+          destination: v.destination,
+        }));
+        console.log(formatted);
+
+        setTrajet(formatted);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des trajet :", error);
+      }
+    };
+
+    const fetchVoitures = async () => {
+      try {
+        const responseVoiture = await GetVoiture();
+        const dataVoiture = responseVoiture.data.data;
+
+        const formattedVoiture = dataVoiture.map((vo) => ({
+          id: vo.idvoiture,
+          matricule: vo.numero_matricule,
+        }));
+        console.log(formattedVoiture);
+
+        setVoitures(formattedVoiture);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des voitures :", error);
+      }
+    };
+
+    const fetchChauffeur = async () => {
+      try {
+        const response = await GetChauffeur();
+        const data = response.data.data;
+
+        const formatted = data.map((v) => ({
+          id: v.idemploye,
+          nomEmp: v.Utilisateur.nom,
+        }));
+        console.log(formatted);
+
+        setChauffeur(formatted);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des Chauffeurs :", error);
+      }
+    };
 
     fetchVoyage();
+    fetchTrajet();
+    fetchVoitures();
+    fetchChauffeur();
   }, []);
 
   return (
@@ -52,6 +122,9 @@ function Voyage() {
           { key: "date", label: "Date du Voyage" },
         ]}
         data={Employee}
+        dataID1={Trajet}
+        dataID2={Voitures}
+        dataID3={Chauffeur}
         onDataChange={async (id, newData) => {
           try {
             if (newData === null) {

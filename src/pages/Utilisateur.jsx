@@ -7,6 +7,7 @@ import {
   GetUtilisateur,
   UpdateUtilisateur,
 } from "../assets/servicRoute/user.service";
+import bcrypt from "bcryptjs"; // ⬅️ import pour hachage
 
 function Utilisateur() {
   const [Trajet, setUtilisateur] = useState([]);
@@ -51,11 +52,19 @@ function Utilisateur() {
             if (newData === null) {
               await DeleteUtilisateur(id);
             } else {
+              let motPasseHashe = newData.mot_passe;
+
+              // Hasher le mot de passe seulement lors de l'ajout
+              if (id === null && newData.mot_passe) {
+                const salt = await bcrypt.genSalt(10);
+                motPasseHashe = await bcrypt.hash(newData.mot_passe, salt);
+              }
+
               const utilisateurPayload = {
                 nom: newData.nom,
                 numcin: newData.numcin,
                 numtel: newData.numtel,
-                mot_passe: newData.mot_passe,
+                mot_passe: motPasseHashe,
               };
 
               if (id === null) {
@@ -77,23 +86,6 @@ function Utilisateur() {
             setUtilisateur(formatted);
           } catch (error) {
             console.error("Erreur lors de l'opération CRUD :", error);
-          }
-        }}
-        onDelete={async (id) => {
-          try {
-            await DeleteUtilisateur(id);
-            const response = await GetUtilisateur();
-            const data = response.data.data;
-            const formatted = data.map((v) => ({
-              id: v.iduser,
-              nom: v.nom,
-              numcin: v.numcin,
-              numtel: v.numtel,
-              mot_passe: v.mot_passe,
-            }));
-            setUtilisateur(formatted);
-          } catch (error) {
-            console.error("Erreur lors de la suppression :", error);
           }
         }}
       />

@@ -15,6 +15,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  user-select: none;
   align-items: center;
 }
 .navbar__logo {
@@ -34,7 +35,9 @@
   height: 90%;
   display: flex;
   justify-content: center;
+  transition: all 0.3s;
 }
+
 .navbar__links5 ul {
   list-style: none;
   display: flex;
@@ -55,7 +58,7 @@
   /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.26); */
   transition: all 0.5s;
 }
-.fa-sign-out{
+.fa-sign-out {
   font-size: 14px;
 }
 .navbar__links5 li:hover {
@@ -113,12 +116,12 @@
   overflow: hidden;
   padding-right: 20px;
 }
-.navbar_droite #déco i{
+.navbar_droite #déco i {
   position: relative;
   right: 10px;
   width: 10px;
 }
-.navbar_droite #déco span{
+.navbar_droite #déco span {
   font-size: 12px;
   position: relative;
   left: 13px;
@@ -138,4 +141,99 @@
 }
 .navbar_droite button {
   background-color: transparent;
+}
+#notif_texte {
+  
+ 
+  display: none;
+}
+@keyframes notif_texte {
+  from {
+    transform: translateX(300px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+#notif_texteactive {
+   width: 40%;
+  height: 93%;
+  /* background-color: antiquewhite; */
+  animation: notif_texte 0.3s;
+  border-left: 1px solid #004b8d3a;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+#notif {
+  border: 1px solid rgba(255, 0, 0, 0.384);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 25px;
+  padding-left: 20px;
+  background-color: white;
+  padding-right: 20px;
+  /* margin-bottom: -30px; */
+  border-radius: 20px;
+  justify-content: center;
+  transition: all 0.3s;
+}
+#notif p {
+  position: relative;
+  bottom: 1px;
+}
+#notifrond {
+  width: 8px;
+  height: 8px;
+  background-color: var(--rouge);
+  border-radius: 50%;
+  animation: notifrond 1.5s infinite;
+}
+@keyframes notifrond {
+  0%,
+  100% {
+    scale: 0.5;
+  }
+  50% {
+    scale: 1;
+  }
+}
+#notif:hover {
+  border: 1px solid var(--rouge);
+}
+#notif__ {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 78%;
+  gap: 20px;
+  height: 60px;
+  /* border: 1px solid black; */
+  border-radius: 20px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 0, 0, 0.384);
+  animation: notif_texte ;
+  padding-left: 20px;
+  animation-duration: 0.6s;
+}
+#notif__ i {
+  color: var(--bleu-marine);
+}
+#texte__ {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+#texte__ h3 {
+  margin: 0;
+  color: var(--rouge);
+  font-size: 14px;
+}
+#texte__ p {
+  margin: 0;
+  text-align: left;
 }
