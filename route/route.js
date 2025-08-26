@@ -54,6 +54,7 @@ router.post("/createEmploye/", employe.createEmploye);
 router.put("/updatEmploye/:id", employe.updateEmploye);
 router.delete("/deleteEmploye/:id", employe.deleteEmploye);
 router.get("/getAllEmploye/", employe.getAllEmployes);
+router.get("/getAllChauffeur/", employe.getAllChauffeur);
 //router.get("/rechercheEmploye/:id",employe.getEmployeById);
 router.post("/createColis/", colis.createColis);
 // router.put("/updateChauffeur/:id",chauffeur.updateChauffeur);

@@ -99,6 +99,33 @@ exports.getAllEmployes = async (req, res) => {
   }
 };
 
+exports.getAllChauffeur = async (req, res) => {
+  try {
+    const Chauffeur = await Employe.findAll({
+      order: [['idemploye', 'DESC']],
+      include: [
+        {
+          model: Poste,
+          where:{ nom_poste: "Chauffeur" },
+          attributes: ['idposte', 'nom_poste']
+        },
+        {
+          model: Utilisateur,
+          attributes: ['iduser', 'numcin', 'nom', 'numtel']
+        }
+      ]
+    });
+
+    return res.status(200).json({
+      message: "Liste des chauffeurs récupérée avec succès",
+      data: Chauffeur
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération :", error);
+    return res.status(500).json({ message: "Erreur lors de la récupération des employés" });
+  }
+};
+
 // GET BY ID
 // exports.getEmployeById = async (req, res) => {
 //   try {
