@@ -7,7 +7,7 @@ import {
   GetUtilisateur,
   UpdateUtilisateur,
 } from "../assets/servicRoute/user.service";
-import bcrypt from "bcryptjs"; // ⬅️ import pour hachage
+import bcrypt from "bcryptjs";
 
 function Utilisateur() {
   const [Trajet, setUtilisateur] = useState([]);
@@ -27,7 +27,10 @@ function Utilisateur() {
         }));
         setUtilisateur(formatted);
       } catch (error) {
-        console.error("Erreur lors de la récupération des utilisateurs :", error);
+        console.error(
+          "Erreur lors de la récupération des utilisateurs :",
+          error
+        );
       }
     };
 

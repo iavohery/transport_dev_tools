@@ -10,6 +10,7 @@ function Payement({
   totalPrice,
   globalSelections,
   refreshVoitures,
+  onPaymentSuccess,
 }) {
   const [activePayment, setActivePayment] = useState(null);
   const [isValidated, setIsValidated] = useState(false);
@@ -75,6 +76,7 @@ function Payement({
   const PostReservation = async (data) => {
     try {
       await AjouterReservation(data);
+      onPaymentSuccess();
     } catch (error) {
       console.error("Erreur lors de l'ajout de la reservation :", error);
     }
